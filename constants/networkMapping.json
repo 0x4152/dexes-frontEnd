@@ -1,0 +1,26 @@
+{
+    "1": {
+        "MinimalViableDexV1": [
+            "0x40fAFAe7A99D41B59466429A434FA3fb919093e5"
+        ],
+        "YeahToken": [
+            "0xFCA6288836902826f7CCfF63E62F813537A0350B"
+        ]
+    },
+    "5": {
+        "MinimalViableDexV1": [
+            "0x40fAFAe7A99D41B59466429A434FA3fb919093e5"
+        ],
+        "YeahToken": [
+            "0xFCA6288836902826f7CCfF63E62F813537A0350B"
+        ]
+    },
+    "1337": {
+        "MinimalViableDexV1": [
+            "0x40fAFAe7A99D41B59466429A434FA3fb919093e5"
+        ],
+        "YeahToken": [
+            "0xFCA6288836902826f7CCfF63E62F813537A0350B"
+        ]
+    }
+}
