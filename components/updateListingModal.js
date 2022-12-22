@@ -1,14 +1,16 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Input, Modal, useNotification, Card } from "web3uikit"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //When we apply useNotification, we need to also import a NotificationProvider on _app.js for it to work
 //import { NotificationProvider } from "web3uikit"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-import { useWeb3Contract } from "react-moralis"
-import YeahTokenAbi from "../constants/YEAHabi.json"
+import { useWeb3Contract, useMoralis } from "react-moralis"
+import WETHabi from "../constants/WETHabi.json"
+import WBTCabi from "../constants/WBTC.json"
 import { ethers } from "ethers"
 
 export default function UpdateListingModal({ YeahTokenAddress, DexAddress, isVisible, onClose }) {
+    const { isWeb3Enabled, chainId, account } = useMoralis()
     const [tokenAmountToApprove, setTokenAmountToApprove] = useState(0)
     const dispatch = useNotification()
 
@@ -21,24 +23,23 @@ export default function UpdateListingModal({ YeahTokenAddress, DexAddress, isVis
         await tx.wait(1)
         dispatch({
             type: "success",
-            message: "Transaction sent",
+            message: "Tokens Approved",
             title: "Approve Transaction sent, wait for block to be mined",
             position: "topR",
         })
         onClose && onClose()
         setPriceToUpdateListingWith("0")
     }
-
+    //contract functions
     const { runContractFunction: approve } = useWeb3Contract({
-        abi: YeahTokenAbi,
+        abi: WETHabi,
         contractAddress: YeahTokenAddress,
         functionName: "approve",
         params: {
-            nftAddress: DexAddress,
-            amount: ethers.utils.parseEther(tokenAmountToApprove.toString()),
+            guy: DexAddress,
+            wad: ethers.utils.parseEther(tokenAmountToApprove.toString()),
         },
     })
-
     return (
         <Modal
             isVisible={isVisible}
