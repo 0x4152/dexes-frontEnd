@@ -1,26 +1,26 @@
 {
     "1": {
-        "MinimalViableDexV1": [
-            "0x40fAFAe7A99D41B59466429A434FA3fb919093e5"
+        "DexV1": [
+            "0xa1822C6bf2f7718a82fCDCe87F74F4B71B100844"
         ],
         "YeahToken": [
-            "0xFCA6288836902826f7CCfF63E62F813537A0350B"
+            "0xD02f877E7c9748B69729ACf39949C12A8D529B5c"
         ]
     },
     "5": {
-        "MinimalViableDexV1": [
-            "0x40fAFAe7A99D41B59466429A434FA3fb919093e5"
+        "DexV1": [
+            "0xa1822C6bf2f7718a82fCDCe87F74F4B71B100844"
         ],
         "YeahToken": [
-            "0xFCA6288836902826f7CCfF63E62F813537A0350B"
+            "0xD02f877E7c9748B69729ACf39949C12A8D529B5c"
         ]
     },
     "1337": {
-        "MinimalViableDexV1": [
-            "0x40fAFAe7A99D41B59466429A434FA3fb919093e5"
+        "DexV1": [
+            "0xa1822C6bf2f7718a82fCDCe87F74F4B71B100844"
         ],
         "YeahToken": [
-            "0xFCA6288836902826f7CCfF63E62F813537A0350B"
+            "0xD02f877E7c9748B69729ACf39949C12A8D529B5c"
         ]
     }
 }

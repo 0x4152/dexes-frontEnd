@@ -5,11 +5,13 @@ import { useWeb3Contract, useMoralis } from "react-moralis"
 import WETHabi from "../constants/WETHabi.json"
 import WBTCabi from "../constants/WBTC.json"
 import { ethers } from "ethers"
-export default function DexV1EthToToken({ onClick, setTokenAmount, tokenAmount }) {
+export default function DexV1EthToToken({ onClick, setTokenAmount, tokenAmount, expectedTokens }) {
     const { isWeb3Enabled, chainId, account } = useMoralis()
 
     function handleEthChange(e) {
-        setTokenAmount(e.target.value)
+        if (e.target.value > 0) {
+            setTokenAmount(e.target.value)
+        }
     }
     return (
         <div>
@@ -31,7 +33,7 @@ export default function DexV1EthToToken({ onClick, setTokenAmount, tokenAmount }
                             placeholder="0"
                         />
                     </div>
-
+                    {expectedTokens}
                     <div className="flex items-center justify-between">
                         <button
                             onClick={onClick}

@@ -22,13 +22,15 @@ export default function Home() {
     const { isWeb3Enabled, chainId, account } = useMoralis()
     const chainString = chainId ? parseInt(chainId).toString() : "1337"
 
-    const DexAddress = networkMapping[chainString]["MinimalViableDexV1"][0]
+    const DexAddress = networkMapping[chainString]["DexV1"][0]
     const YeahTokenAddress = networkMapping[chainString]["YeahToken"][0]
     //stateVariables
     const [dexDisplayed, setDexDisplayed] = useState(0)
     const [showApprovedTokens, setShowApprovedTokens] = useState(false)
     const [approvedTokens, setApprovedTokens] = useState(0)
-    const [tokenAmount, setTokenAmount] = useState(0)
+    const [tokenAmount, setTokenAmount] = useState(1)
+    const [expectedTokenAmount, setExpectedTokenAmount] = useState(0)
+    const [expectedEthAmount, setexpectedEthAmount] = useState(0)
     //useEffect
     async function updateUI() {
         setApprovedTokens(ethers.utils.formatEther(await allowance()))
@@ -36,7 +38,19 @@ export default function Home() {
             setShowApprovedTokens(true)
         }
     }
+    async function updateExpecteds() {
+        if (dexDisplayed) {
+            setExpectedTokenAmount(ethers.utils.formatEther(await ethToTokenView()).toString())
+        } else {
+            setexpectedEthAmount(ethers.utils.formatEther(await tokenToEthView()).toString())
+        }
+    }
 
+    useEffect(() => {
+        if (isWeb3Enabled) {
+            updateExpecteds()
+        }
+    }, [tokenAmount])
     useEffect(() => {
         if (isWeb3Enabled) {
             updateUI()
@@ -47,13 +61,15 @@ export default function Home() {
     /////////////////////////////////////////////////
     //Handle card clicks
     const handleCardClick = () => {
-        console.log("CardClick")
-        approve({
-            onError: (error) => {
-                console.log(error)
-            },
-            onSuccess: (tx) => handleApproveSuccess(tx),
-        })
+        if (tokenAmount > 0) {
+            console.log("CardClick")
+            approve({
+                onError: (error) => {
+                    console.log(error)
+                },
+                onSuccess: (tx) => handleApproveSuccess(tx),
+            })
+        }
     }
     const handleEthToTokenClick = () => {
         setDexDisplayed(1)
@@ -112,7 +128,7 @@ export default function Home() {
         functionName: "approve",
         params: {
             guy: DexAddress,
-            wad: ethers.utils.parseEther(tokenAmount.toString()),
+            wad: tokenAmount ? ethers.utils.parseEther(tokenAmount.toString()) : 1,
         },
     })
     const { runContractFunction: ethToToken } = useWeb3Contract({
@@ -133,7 +149,24 @@ export default function Home() {
             tokens: ethers.utils.parseEther(tokenAmount.toString()),
         },
     })
+    const { runContractFunction: tokenToEthView } = useWeb3Contract({
+        abi: DexABI,
+        contractAddress: DexAddress,
+        functionName: "tokenToEthView",
+        params: {
+            ethToToken: ethers.utils.parseEther(tokenAmount.toString()),
+            tokens: ethers.utils.parseEther(tokenAmount.toString()),
+        },
+    })
+    const { runContractFunction: ethToTokenView } = useWeb3Contract({
+        abi: DexABI,
+        contractAddress: DexAddress,
+        functionName: "ethToTokenView",
 
+        params: {
+            msgValue: ethers.utils.parseEther(tokenAmount.toString()),
+        },
+    })
     return (
         <div className="container mx-auto">
             <h1 className="py-4 px-4 font-bold text-2xl">
@@ -169,6 +202,7 @@ export default function Home() {
                                             onClick={handleCardClick}
                                             setTokenAmount={setTokenAmount}
                                             tokenAmount={tokenAmount}
+                                            expectedTokens={expectedTokenAmount}
                                         />
                                     </div>
                                 ) : (
@@ -196,6 +230,7 @@ export default function Home() {
                                             onClick={handleCardClick}
                                             setTokenAmount={setTokenAmount}
                                             tokenAmount={tokenAmount}
+                                            expectedEth={expectedEthAmount}
                                         />
                                     </div>
                                 )}
