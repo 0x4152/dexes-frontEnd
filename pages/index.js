@@ -28,9 +28,15 @@ export default function Home() {
     const [dexDisplayed, setDexDisplayed] = useState(0)
     const [showApprovedTokens, setShowApprovedTokens] = useState(false)
     const [approvedTokens, setApprovedTokens] = useState(0)
-    const [tokenAmount, setTokenAmount] = useState(1)
+    const [tokenAmount, setTokenAmount] = useState("0.0")
     const [expectedTokenAmount, setExpectedTokenAmount] = useState(0)
     const [expectedEthAmount, setexpectedEthAmount] = useState(0)
+    const [validRequest, setValidRequest] = useState(false)
+    console.log(`aloha ${/^\d+\.*(\d+)*$/.test(tokenAmount)}`)
+    //validRequest checker
+    async function requestChecker() {
+        //return /^\d+$/.test(tokenAmount)
+    }
     //useEffect
     async function updateUI() {
         setApprovedTokens(ethers.utils.formatEther(await allowance()))
@@ -47,13 +53,23 @@ export default function Home() {
     }
 
     useEffect(() => {
-        if (isWeb3Enabled) {
-            updateExpecteds()
+        if (parseFloat(tokenAmount) == NaN) {
+            setValidRequest(false)
+        } else {
+            setValidRequest(true)
+        }
+        console.log(validRequest)
+        if (validRequest) {
+            if (isWeb3Enabled) {
+                updateExpecteds()
+            }
         }
     }, [tokenAmount])
     useEffect(() => {
         if (isWeb3Enabled) {
-            updateUI()
+            if (validRequest) {
+                // updateUI()
+            }
         }
     }, [isWeb3Enabled])
     ///////////////////////////////////////////////////////////
@@ -61,6 +77,7 @@ export default function Home() {
     /////////////////////////////////////////////////
     //Handle card clicks
     const handleCardClick = () => {
+        console.log("hello")
         if (tokenAmount > 0) {
             console.log("CardClick")
             approve({
@@ -88,6 +105,7 @@ export default function Home() {
             position: "topR",
         })
         if (dexDisplayed) {
+            console.log("EthToTOken")
             ethToToken({
                 onError: (error) => {
                     console.log(error)
@@ -95,6 +113,7 @@ export default function Home() {
                 onSuccess: (tx) => handleExchangeSuccess(tx),
             })
         } else {
+            console.log("tokenToEth")
             tokenToEth({
                 onError: (error) => {
                     console.log(error)
@@ -135,9 +154,9 @@ export default function Home() {
         abi: DexABI,
         contractAddress: DexAddress,
         functionName: "ethToToken",
-        value: ethers.utils.parseEther(tokenAmount.toString()),
+        value: tokenAmount == "" ? 1 : ethers.utils.parseEther(tokenAmount.toString()),
         params: {
-            ethToToken: ethers.utils.parseEther(tokenAmount.toString()),
+            ethToToken: tokenAmount == "" ? 1 : ethers.utils.parseEther(tokenAmount.toString()),
         },
     })
     const { runContractFunction: tokenToEth } = useWeb3Contract({
@@ -145,8 +164,8 @@ export default function Home() {
         contractAddress: DexAddress,
         functionName: "tokenToEth",
         params: {
-            ethToToken: ethers.utils.parseEther(tokenAmount.toString()),
-            tokens: ethers.utils.parseEther(tokenAmount.toString()),
+            ethToToken: tokenAmount == "" ? 1 : ethers.utils.parseEther(tokenAmount.toString()),
+            tokens: tokenAmount == "" ? 1 : ethers.utils.parseEther(tokenAmount.toString()),
         },
     })
     const { runContractFunction: tokenToEthView } = useWeb3Contract({
@@ -154,8 +173,8 @@ export default function Home() {
         contractAddress: DexAddress,
         functionName: "tokenToEthView",
         params: {
-            ethToToken: ethers.utils.parseEther(tokenAmount.toString()),
-            tokens: ethers.utils.parseEther(tokenAmount.toString()),
+            ethToToken: tokenAmount == "" ? 1 : ethers.utils.parseEther(tokenAmount.toString()),
+            tokens: tokenAmount == "" ? 1 : ethers.utils.parseEther(tokenAmount.toString()),
         },
     })
     const { runContractFunction: ethToTokenView } = useWeb3Contract({
@@ -164,7 +183,7 @@ export default function Home() {
         functionName: "ethToTokenView",
 
         params: {
-            msgValue: ethers.utils.parseEther(tokenAmount.toString()),
+            msgValue: tokenAmount == "" ? 1 : ethers.utils.parseEther(tokenAmount.toString()),
         },
     })
     return (
