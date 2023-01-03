@@ -9,7 +9,11 @@ export default function DexV1TokenToEth({ onClick, setTokenAmount, tokenAmount, 
     const { isWeb3Enabled, chainId, account } = useMoralis()
 
     function handleTokenChange(e) {
-        setTokenAmount(e.target.value)
+        if (/^\d+\.*(\d+)*$/.test(e.target.value)) {
+            setTokenAmount(e.target.value)
+        } else if (e.target.value == "") {
+            setTokenAmount("0.1")
+        }
     }
 
     return (
@@ -22,7 +26,7 @@ export default function DexV1TokenToEth({ onClick, setTokenAmount, tokenAmount, 
                         </label>
                         <input
                             onChange={handleTokenChange}
-                            value={tokenAmount}
+                            value={tokenAmount ? tokenAmount : ""}
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="username"
                             type="text"
