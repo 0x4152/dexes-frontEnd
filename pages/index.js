@@ -15,9 +15,9 @@ import { ethers } from "ethers"
 import DexV1EthToToken from "../components/dexV1EthToToken"
 import DexV1TokenToEth from "../components/dexV1TokenToEth"
 import WETHabi from "../constants/WETHabi.json"
+import Reserves from "../components/reserves"
+
 export default function Home() {
-    const hideModal = () => setShowModal(false)
-    const [showModal, setShowModal] = useState(false)
     const dispatch = useNotification()
     const { isWeb3Enabled, chainId, account } = useMoralis()
     const chainString = chainId ? parseInt(chainId).toString() : "1337"
@@ -26,42 +26,88 @@ export default function Home() {
     const YeahTokenAddress = networkMapping[chainString]["YeahToken"][0]
     //stateVariables
     const [dexDisplayed, setDexDisplayed] = useState(0)
-    const [showApprovedTokens, setShowApprovedTokens] = useState(false)
-    const [approvedTokens, setApprovedTokens] = useState(0)
-    const [tokenAmount, setTokenAmount] = useState("0.0")
+    const [tokenAmount, setTokenAmount] = useState("0.01")
+    const [depositTokenAmount, setDepositTokenAmount] = useState(0)
     const [expectedTokenAmount, setExpectedTokenAmount] = useState(0)
     const [expectedEthAmount, setexpectedEthAmount] = useState(0)
-    //validRequest checker
-    async function requestChecker() {
-        //return /^\d+$/.test(tokenAmount)
+    const [TokenReserves, setTokenReserves] = useState(0)
+    const [EthReserves, setEthReserves] = useState(0)
+    const [tokensApproved, setTokensApproved] = useState(0)
+    const [tokensToApprove, setTokensToApprove] = useState(0)
+    const [depositEthAmount, setDepositEthAmount] = useState(0)
+    const [tokenAmountToApproveFinal, setTokenAmountToApproveFinal] = useState(0)
+    //calculations
+    async function ethToTokensBoughtCalculation() {
+        let msgValue = ethers.utils.parseEther(tokenAmount)
+
+        let tokenBalance = await getTokenReserves()
+        let ethBalance = await getLiquidity()
+        let initialEthReserves = ethBalance
+        let input_with_fee = msgValue * 997
+        let numerator = tokenBalance * input_with_fee
+        let denominator = initialEthReserves * 1000 + input_with_fee
+        let tokensBought = numerator / denominator
+
+        console.log(ethers.utils.formatEther(tokensBought.toString()))
     }
-    //useEffect
-    async function updateUI() {
-        setApprovedTokens(ethers.utils.formatEther(await allowance()))
-        if (approvedTokens) {
-            setShowApprovedTokens(true)
+
+    function updateDepositTokensCalculation() {
+        if (depositEthAmount) {
+            let tokenAmountToDeposit =
+                (depositEthAmount * TokenReserves) / EthReserves + 1 / 1000000000000000000
+            setTokensToApprove(tokenAmountToDeposit)
+            setTokenAmountToApproveFinal(tokenAmountToDeposit - tokensApproved)
+        } else {
+            setTokensToApprove(0)
         }
     }
+
+    //useEffect
+    async function updateUI() {
+        let allowanceUnformatted = await allowance()
+        let allowanceFormatted = allowanceUnformatted / 1000000000000000000
+        setTokensApproved(allowanceFormatted)
+        let liquidity = await getLiquidity()
+        console.log(liquidity)
+        let liquidityFormatted = ethers.utils.formatEther(liquidity).toString()
+        console.log(liquidityFormatted)
+        setEthReserves(liquidityFormatted)
+        let tokenReserves = await getTokenReserves()
+        let tokenReservesFormatted = ethers.utils.formatEther(tokenReserves)
+        setTokenReserves(tokenReservesFormatted)
+    }
+    //Function called onChange when introducing correct input
     async function updateExpecteds() {
-        console.log(tokenAmount)
         if (dexDisplayed) {
-            console.log((ethers.utils.parseEther(tokenAmount) / 1000).toString())
-            //setExpectedTokenAmount(ethers.utils.formatEther(await ethToTokenView()).toString())
+            ethToTokensBought()
+
+            let tokensExpected = await ethToTokenView()
+            let tokensExpectedFormatted = ethers.utils.formatEther(tokensExpected)
+            setExpectedTokenAmount(tokensExpectedFormatted)
         } else {
-            setexpectedEthAmount(ethers.utils.formatEther(await tokenToEthView()).toString())
+            let ethExpected = await tokenToEthView()
+            let ethExpectedFormatted = ethExpected / 1000000000000000000
+            console.log(`eth exp ${ethExpectedFormatted}`)
+            setexpectedEthAmount(ethExpectedFormatted)
         }
     }
 
     useEffect(() => {
+        if (/^\d+\.*(\d+)*$/.test(depositTokenAmount)) {
+            updateDepositTokensCalculation()
+        } else {
+            console.log("incorrect input")
+        }
         if (/^\d+\.*(\d+)*$/.test(tokenAmount)) {
             updateExpecteds()
         } else {
             console.log("nope")
         }
-    }, [tokenAmount])
+    }, [tokenAmount, isWeb3Enabled, depositEthAmount])
+
     useEffect(() => {
         if (isWeb3Enabled) {
-            // updateUI()
+            updateUI()
         }
     }, [isWeb3Enabled])
     ///////////////////////////////////////////////////////////
@@ -78,6 +124,26 @@ export default function Home() {
                 onSuccess: (tx) => handleApproveSuccess(tx),
             })
         }
+    }
+    const handleDepositClick = () => {
+        console.log("depositclick")
+    }
+    async function approveDepositClick() {
+        await approveDeposit({
+            onError: (error) => console.log(error),
+            onSuccess: handleBuyItemSuccess,
+        })
+    }
+    const handleBuyItemSuccess = () => {
+        dispatch({
+            type: "success",
+            message: "Tokens Approved - please refresh page",
+            title: "Tokens Approved",
+            position: "topR",
+        })
+    }
+    const handleApproveClick = () => {
+        approveDepositClick()
     }
     const handleEthToTokenClick = () => {
         setDexDisplayed(1)
@@ -132,7 +198,16 @@ export default function Home() {
             _spender: DexAddress,
         },
     })
-    const { runContractFunction: approve } = useWeb3Contract({
+    const { runContractFunction: approveDeposit } = useWeb3Contract({
+        abi: WETHabi,
+        contractAddress: YeahTokenAddress,
+        functionName: "approve",
+        params: {
+            guy: DexAddress,
+            wad: ethers.utils.parseEther(tokenAmountToApproveFinal.toString()),
+        },
+    })
+    const { runContractFunction: approveExchange } = useWeb3Contract({
         abi: WETHabi,
         contractAddress: YeahTokenAddress,
         functionName: "approve",
@@ -141,6 +216,7 @@ export default function Home() {
             wad: ethers.utils.parseEther(tokenAmount.toString()),
         },
     })
+
     const { runContractFunction: ethToToken } = useWeb3Contract({
         abi: DexABI,
         contractAddress: DexAddress,
@@ -164,7 +240,6 @@ export default function Home() {
         contractAddress: DexAddress,
         functionName: "tokenToEthView",
         params: {
-            ethToToken: ethers.utils.parseEther(tokenAmount.toString()),
             tokens: ethers.utils.parseEther(tokenAmount.toString()),
         },
     })
@@ -177,12 +252,38 @@ export default function Home() {
             msgValue: ethers.utils.parseEther(tokenAmount).toString(),
         },
     })
+    const { runContractFunction: getLiquidity } = useWeb3Contract({
+        abi: DexABI,
+        contractAddress: DexAddress,
+        functionName: "getLiquidity",
+
+        params: {},
+    })
+    const { runContractFunction: getTokenReserves } = useWeb3Contract({
+        abi: DexABI,
+        contractAddress: DexAddress,
+        functionName: "getTokenReserves",
+
+        params: {},
+    })
     return (
         <div className="container mx-auto">
             <h1 className="py-4 px-4 font-bold text-2xl">
                 {chainString != 5 ? "Please connect to the Göerli testnet" : ""}
             </h1>
             <div className="space-x-6 mx-6">
+                <Reserves
+                    tokenReserves={TokenReserves}
+                    ethReserves={EthReserves}
+                    tokensApproved={tokensApproved}
+                    setDepositTokenAmount={setDepositTokenAmount}
+                    depositTokenAmount={depositTokenAmount}
+                    onDepositClick={handleDepositClick}
+                    onApproveClick={handleApproveClick}
+                    setDepositEthAmount={setDepositEthAmount}
+                    depositEthAmount={depositEthAmount}
+                    tokensToApprove={tokensToApprove}
+                />
                 {isWeb3Enabled ? (
                     chainString == 5 ? (
                         <div className="justify-center">

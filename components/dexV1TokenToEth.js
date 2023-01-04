@@ -34,7 +34,7 @@ export default function DexV1TokenToEth({ onClick, setTokenAmount, tokenAmount, 
                         />
                     </div>
                     <div className="block text-gray-700 text-sm font-bold mb-2">Eth returned </div>
-                    <div className="m-2">{expectedEth}</div>
+                    <div className="m-2">{expectedEth} ETH</div>
 
                     <div class="flex items-center justify-between">
                         <button

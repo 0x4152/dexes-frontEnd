@@ -35,7 +35,10 @@ export default function DexV1EthToToken({ onClick, setTokenAmount, tokenAmount, 
                             placeholder="0"
                         />
                     </div>
-                    {expectedTokens}
+                    <div className="block text-gray-700 text-sm font-bold mb-2">
+                        Tokens Returned{" "}
+                    </div>
+                    <div className="m-2">{expectedTokens} YEAH</div>
                     <div className="flex items-center justify-between">
                         <button
                             onClick={onClick}
