@@ -29,6 +29,7 @@ export default function Reserves({
     })
     const [showAlertDeposit, setShowAlertDeposit] = useState(false)
     function handleDepositChange(e) {
+        console.log(depositEthAmount)
         if (/^\d+\.*(\d+)*$/.test(e.target.value)) {
             if (tokensApproved >= tokensToApprove) {
                 setShowAlertDeposit(false)
@@ -38,7 +39,14 @@ export default function Reserves({
             setDepositEthAmount(1)
         }
     }
-    function depositTokensCalculation() {}
+
+    useEffect(() => {
+        setData({
+            labels: ["ETH reserves", "YEAH reserves"],
+            datasets: [{ label: "Tokens", data: [ethReserves, tokenReserves] }],
+            backgroundColor: ["red", "blue"],
+        })
+    }, [ethReserves, tokenReserves])
     return (
         <div>
             <div className="w-full max-w-xl hover:bg-slate-300">
@@ -75,7 +83,7 @@ export default function Reserves({
                                             You have {tokensApproved} YEAH approved, not enough for
                                             the ETH quantity you want to deposit, you will need to
                                             approve
-                                            <strong>{tokensToApprove - tokensApproved} </strong>
+                                            <strong> {tokensToApprove - tokensApproved} </strong>
                                             YEAH tokens to deposit
                                             <strong>{depositEthAmount} </strong>
                                             ETH

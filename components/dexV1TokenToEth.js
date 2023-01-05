@@ -5,7 +5,17 @@ import { useWeb3Contract, useMoralis } from "react-moralis"
 import WETHabi from "../constants/WETHabi.json"
 import WBTCabi from "../constants/WBTC.json"
 import { ethers } from "ethers"
-export default function DexV1TokenToEth({ onClick, setTokenAmount, tokenAmount, expectedEth }) {
+export default function DexV1TokenToEth({
+    onClick,
+    setTokenAmount,
+    tokenAmount,
+    expectedEth,
+    exchangeDepositTokenAmount,
+    setExchangeDepositTokenAmount,
+    onExchangeApproveClick,
+    tokensToApproveExchange,
+    onExchangeDepositClick,
+}) {
     const { isWeb3Enabled, chainId, account } = useMoralis()
 
     function handleTokenChange(e) {
@@ -37,12 +47,29 @@ export default function DexV1TokenToEth({ onClick, setTokenAmount, tokenAmount, 
                     <div className="m-2">{expectedEth} ETH</div>
 
                     <div class="flex items-center justify-between">
+                        {tokensApproved >= tokensToApproveExchange && tokensApproved > 0 ? (
+                            <button
+                                onClick={onExchangeDepositClick}
+                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                type="button"
+                            >
+                                Exchange
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => setShowAlertDeposit(true)}
+                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                type="button"
+                            >
+                                Exchange
+                            </button>
+                        )}
                         <button
-                            onClick={() => onClick}
+                            onClick={onExchangeApproveClick}
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                             type="button"
                         >
-                            Exchange
+                            Approve
                         </button>
                     </div>
                 </form>

@@ -28,14 +28,17 @@ export default function Home() {
     const [dexDisplayed, setDexDisplayed] = useState(0)
     const [tokenAmount, setTokenAmount] = useState("0.01")
     const [depositTokenAmount, setDepositTokenAmount] = useState(0)
+    const [exchangeDepositTokenAmount, setExchangeDepositTokenAmount] = useState(0)
     const [expectedTokenAmount, setExpectedTokenAmount] = useState(0)
     const [expectedEthAmount, setexpectedEthAmount] = useState(0)
     const [TokenReserves, setTokenReserves] = useState(0)
     const [EthReserves, setEthReserves] = useState(0)
     const [tokensApproved, setTokensApproved] = useState(0)
     const [tokensToApprove, setTokensToApprove] = useState(0)
+    const [tokensToApproveExchange, setTokensToApproveExchange] = useState(0)
     const [depositEthAmount, setDepositEthAmount] = useState(0)
     const [tokenAmountToApproveFinal, setTokenAmountToApproveFinal] = useState(0)
+    const [tokenToEthExchangeViable, setTokenToEthExchangeViable] = useState(false)
     //calculations
     async function ethToTokensBoughtCalculation() {
         let msgValue = ethers.utils.parseEther(tokenAmount)
@@ -50,7 +53,8 @@ export default function Home() {
 
         console.log(ethers.utils.formatEther(tokensBought.toString()))
     }
-
+    //Function that updates the amount of tokens that need to be approved to deposit "depositEthAmount" (the input in the deposit liquidity), to
+    //To take exactly that amount of tokens upon depositing.
     function updateDepositTokensCalculation() {
         if (depositEthAmount) {
             let tokenAmountToDeposit =
@@ -62,15 +66,22 @@ export default function Home() {
         }
     }
 
+    function updateDiffTokensApproved() {
+        if (tokensApproved < tokenAmount) {
+            setTokensToApproveExchange(tokenAmount - tokensApproved)
+            setTokenToEthExchangeViable(false)
+        } else {
+            setTokenToEthExchangeViable(true)
+        }
+    }
+
     //useEffect
     async function updateUI() {
         let allowanceUnformatted = await allowance()
         let allowanceFormatted = allowanceUnformatted / 1000000000000000000
         setTokensApproved(allowanceFormatted)
         let liquidity = await getLiquidity()
-        console.log(liquidity)
         let liquidityFormatted = ethers.utils.formatEther(liquidity).toString()
-        console.log(liquidityFormatted)
         setEthReserves(liquidityFormatted)
         let tokenReserves = await getTokenReserves()
         let tokenReservesFormatted = ethers.utils.formatEther(tokenReserves)
@@ -87,7 +98,6 @@ export default function Home() {
         } else {
             let ethExpected = await tokenToEthView()
             let ethExpectedFormatted = ethExpected / 1000000000000000000
-            console.log(`eth exp ${ethExpectedFormatted}`)
             setexpectedEthAmount(ethExpectedFormatted)
         }
     }
@@ -125,16 +135,46 @@ export default function Home() {
             })
         }
     }
+    const exchangeEthToToken = () => {
+        if (tokenAmount > 0) {
+            console.log("CardClick")
+            approve({
+                onError: (error) => {
+                    console.log(error)
+                },
+                onSuccess: (tx) => handleApproveSuccess(tx),
+            })
+        }
+    }
+    //////////DEPOSIT//////////////////////////
     const handleDepositClick = () => {
-        console.log("depositclick")
+        depositLiquidity()
+    }
+    async function depositLiquidity() {
+        await deposit({
+            onError: (error) => console.log(error),
+            onSuccess: handleDepositSuccess,
+        })
+    }
+    const handleDepositSuccess = () => {
+        dispatch({
+            type: "success",
+            message: "Liquidity Provided - wait for transaction confirmation and refresh the page",
+            title: "Liquidity provided",
+            position: "topR",
+        })
+    }
+    ///APPROVE DEPOSIT//////////////////////////////
+    const handleApproveClick = () => {
+        approveDepositClick()
     }
     async function approveDepositClick() {
         await approveDeposit({
             onError: (error) => console.log(error),
-            onSuccess: handleBuyItemSuccess,
+            onSuccess: handleApproveDepositSuccess,
         })
     }
-    const handleBuyItemSuccess = () => {
+    const handleApproveDepositSuccess = () => {
         dispatch({
             type: "success",
             message: "Tokens Approved - please refresh page",
@@ -142,9 +182,49 @@ export default function Home() {
             position: "topR",
         })
     }
-    const handleApproveClick = () => {
-        approveDepositClick()
+    ///////////////////////////////////////////////////////
+    const handleExchangeEthToTokenClick = () => {
+        exchangeEthToToken()
     }
+    /////////////////////APPROVE EXCHANGE//////////
+    const handleExchangeApproveClick = () => {
+        approveExchangeClick()
+    }
+    async function approveExchangeClick() {
+        await approveExchange({
+            onError: (error) => console.log(error),
+            onSuccess: handleApproveExchangeSuccess,
+        })
+    }
+    const handleApproveExchangeSuccess = () => {
+        dispatch({
+            type: "success",
+            message: "Tokens Approved - please refresh page",
+            title: "Tokens Approved",
+            position: "topR",
+        })
+    }
+    //////////////////////////////////////
+    //////HANDLE EXCHANGE TOKEN TO ETH CLICK
+    const handleExchangeTokenToEth = () => {
+        exchangeTokenToEth()
+    }
+    async function exchangeTokenToEth() {
+        await tokenToEth({
+            onError: (error) => console.log(error),
+            onSuccess: handleExchangeTokenToEthSuccess,
+        })
+    }
+    const handleExchangeTokenToEthSuccess = () => {
+        dispatch({
+            type: "success",
+            message: "Tokens Approved - please refresh page",
+            title: "Tokens Approved",
+            position: "topR",
+        })
+    }
+
+    ///////////////////////////
     const handleEthToTokenClick = () => {
         setDexDisplayed(1)
     }
@@ -206,6 +286,15 @@ export default function Home() {
             guy: DexAddress,
             wad: ethers.utils.parseEther(tokenAmountToApproveFinal.toString()),
         },
+    })
+    const { runContractFunction: deposit } = useWeb3Contract({
+        abi: DexABI,
+        contractAddress: DexAddress,
+        functionName: "deposit",
+        msgValue: depositEthAmount
+            ? ethers.utils.parseEther(depositEthAmount.toString()).toString()
+            : "0",
+        params: {},
     })
     const { runContractFunction: approveExchange } = useWeb3Contract({
         abi: WETHabi,
@@ -310,7 +399,7 @@ export default function Home() {
                                             </li>
                                         </ul>
                                         <DexV1EthToToken
-                                            onClick={handleCardClick}
+                                            onClick={handleExchangeEthToTokenClick}
                                             setTokenAmount={setTokenAmount}
                                             tokenAmount={tokenAmount}
                                             expectedTokens={expectedTokenAmount}
@@ -342,6 +431,13 @@ export default function Home() {
                                             setTokenAmount={setTokenAmount}
                                             tokenAmount={tokenAmount}
                                             expectedEth={expectedEthAmount}
+                                            exchangeDepositTokenAmount={exchangeDepositTokenAmount}
+                                            setExchangeDepositTokenAmount={
+                                                setExchangeDepositTokenAmount
+                                            }
+                                            onExchangeApproveClick={handleExchangeApproveClick}
+                                            tokensToApproveExchange={tokensToApproveExchange}
+                                            onExchangeTokenToEthClick={handleExchangeTokenToEth}
                                         />
                                     </div>
                                 )}
