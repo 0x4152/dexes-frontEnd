@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react"
 import { Input, Modal, useNotification, Card } from "web3uikit"
 
+import { Alert } from "@mui/material"
 import { useWeb3Contract, useMoralis } from "react-moralis"
 import WETHabi from "../constants/WETHabi.json"
 import WBTCabi from "../constants/WBTC.json"
 import { ethers } from "ethers"
 export default function DexV1TokenToEth({
-    onClick,
     setTokenAmount,
     tokenAmount,
     expectedEth,
-    exchangeDepositTokenAmount,
-    setExchangeDepositTokenAmount,
     onExchangeApproveClick,
     tokensToApproveExchange,
-    onExchangeDepositClick,
+    onExchangeTokenToEthClick,
+    tokensApproved,
+    setTokensToApproveExchange,
 }) {
     const { isWeb3Enabled, chainId, account } = useMoralis()
 
@@ -34,6 +34,37 @@ export default function DexV1TokenToEth({
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
                             Tokens to ETH
                         </label>
+                        {tokensApproved ? (
+                            tokensApproved >= tokensToApproveExchange ? (
+                                <Alert severity="success">
+                                    You have <strong>{tokensApproved} YEAH </strong>approved
+                                </Alert>
+                            ) : (
+                                <div>
+                                    <Alert severity="warning">
+                                        You have <strong>{tokensApproved} YEAH </strong>approved,
+                                        not enough for the quantity you want to exchange.
+                                    </Alert>
+                                    <Alert severity="info">
+                                        <p className="m-4">
+                                            Click on the approve button to approve this contract to
+                                            manipulate
+                                            <strong>{tokensToApproveExchange}</strong>
+                                            YEAH tokens from your account.
+                                        </p>
+                                    </Alert>
+                                </div>
+                            )
+                        ) : (
+                            <Alert severity="info">
+                                <p className="m-4">
+                                    Click on the approve button to approve this contract to
+                                    manipulate{" "}
+                                    <strong>{tokensToApproveExchange} YEAH tokens </strong>
+                                    from your account.
+                                </p>
+                            </Alert>
+                        )}
                         <input
                             onChange={handleTokenChange}
                             value={tokenAmount ? tokenAmount : ""}
@@ -47,9 +78,9 @@ export default function DexV1TokenToEth({
                     <div className="m-2">{expectedEth} ETH</div>
 
                     <div class="flex items-center justify-between">
-                        {tokensApproved >= tokensToApproveExchange && tokensApproved > 0 ? (
+                        {tokensApproved >= tokenAmount && tokensApproved > 0 ? (
                             <button
-                                onClick={onExchangeDepositClick}
+                                onClick={onExchangeTokenToEthClick}
                                 class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                 type="button"
                             >

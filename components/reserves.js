@@ -11,6 +11,8 @@ import WETHabi from "../constants/WETHabi.json"
 import WBTCabi from "../constants/WBTC.json"
 import { ethers } from "ethers"
 export default function Reserves({
+    tokenAmount,
+    dexDisplayed,
     ethReserves,
     tokenReserves,
 
@@ -20,6 +22,8 @@ export default function Reserves({
     setDepositEthAmount,
     depositEthAmount,
     tokensToApprove,
+    expectedEthAmount,
+    expectedTokenAmount,
 }) {
     const { isWeb3Enabled, chainId, account } = useMoralis()
     const [data, setData] = useState({
@@ -29,7 +33,6 @@ export default function Reserves({
     })
     const [showAlertDeposit, setShowAlertDeposit] = useState(false)
     function handleDepositChange(e) {
-        console.log(depositEthAmount)
         if (/^\d+\.*(\d+)*$/.test(e.target.value)) {
             if (tokensApproved >= tokensToApprove) {
                 setShowAlertDeposit(false)
@@ -39,7 +42,56 @@ export default function Reserves({
             setDepositEthAmount(1)
         }
     }
-
+    useEffect(() => {
+        if (dexDisplayed) {
+            //ethToToken
+            console.log("eth to token")
+            console.log(expectedTokenAmount)
+            setData({
+                labels: [
+                    "ETH reserves after trade",
+                    "ETH exchanged",
+                    "YEAH reserves after trade",
+                    "YEAH tokens returned",
+                ],
+                datasets: [
+                    {
+                        label: "Tokens",
+                        data: [
+                            parseFloat(ethReserves) + parseFloat(tokenAmount),
+                            parseFloat(tokenAmount),
+                            parseFloat(tokenReserves) - parseFloat(expectedTokenAmount),
+                            expectedTokenAmount,
+                        ],
+                    },
+                ],
+                backgroundColor: ["red", "blue"],
+            })
+        } else {
+            //tokenToEth
+            console.log(" token to eth")
+            setData({
+                labels: [
+                    "ETH reserves after trade",
+                    "ETH returned",
+                    "YEAH reserves after trade",
+                    "YEAH Tokens exchanged",
+                ],
+                datasets: [
+                    {
+                        label: "Tokens",
+                        data: [
+                            parseFloat(ethReserves) - parseFloat(expectedEthAmount),
+                            parseFloat(expectedEthAmount),
+                            parseFloat(tokenReserves) + parseFloat(tokenAmount),
+                            parseFloat(tokenAmount),
+                        ],
+                    },
+                ],
+                backgroundColor: ["red", "blue"],
+            })
+        }
+    }, [tokenAmount])
     useEffect(() => {
         setData({
             labels: ["ETH reserves", "YEAH reserves"],
@@ -74,8 +126,8 @@ export default function Reserves({
                             {tokensApproved ? (
                                 tokensApproved >= tokensToApprove ? (
                                     <Alert severity="success">
-                                        You {tokensApproved} YEAH approved, enough for the ETH
-                                        quantity you want to deposit
+                                        You <strong>{tokensApproved} YEAH </strong>approved, enough
+                                        for the ETH quantity you want to deposit
                                     </Alert>
                                 ) : (
                                     <div>
@@ -83,7 +135,7 @@ export default function Reserves({
                                             You have {tokensApproved} YEAH approved, not enough for
                                             the ETH quantity you want to deposit, you will need to
                                             approve
-                                            <strong> {tokensToApprove - tokensApproved} </strong>
+                                            <strong> {tokensToApprove} </strong>
                                             YEAH tokens to deposit
                                             <strong>{depositEthAmount} </strong>
                                             ETH
@@ -97,12 +149,9 @@ export default function Reserves({
                                             <p className="m-4">
                                                 Click on the approve button to approve this contract
                                                 to manipulate
-                                                <strong>{tokensToApprove - tokensApproved}</strong>
+                                                <strong>{tokensToApprove}</strong>
                                                 YEAH tokens from your account.
                                             </p>
-                                            Click on the approve button to approve this contract to
-                                            manipulate {tokensToApprove - tokensApproved} YEAH
-                                            tokens from your account.
                                         </Alert>
                                     </div>
                                 )

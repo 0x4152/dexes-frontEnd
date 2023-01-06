@@ -60,7 +60,7 @@ export default function Home() {
             let tokenAmountToDeposit =
                 (depositEthAmount * TokenReserves) / EthReserves + 1 / 1000000000000000000
             setTokensToApprove(tokenAmountToDeposit)
-            setTokenAmountToApproveFinal(tokenAmountToDeposit - tokensApproved)
+            setTokenAmountToApproveFinal(tokenAmountToDeposit)
         } else {
             setTokensToApprove(0)
         }
@@ -90,7 +90,7 @@ export default function Home() {
     //Function called onChange when introducing correct input
     async function updateExpecteds() {
         if (dexDisplayed) {
-            ethToTokensBought()
+            ethToTokensBoughtCalculation()
 
             let tokensExpected = await ethToTokenView()
             let tokensExpectedFormatted = ethers.utils.formatEther(tokensExpected)
@@ -103,6 +103,10 @@ export default function Home() {
     }
 
     useEffect(() => {
+        if (tokenAmount > tokensApproved) {
+            setTokensToApproveExchange(tokenAmount)
+        }
+
         if (/^\d+\.*(\d+)*$/.test(depositTokenAmount)) {
             updateDepositTokensCalculation()
         } else {
@@ -188,6 +192,9 @@ export default function Home() {
     }
     /////////////////////APPROVE EXCHANGE//////////
     const handleExchangeApproveClick = () => {
+        console.log(tokenAmount)
+        console.log(tokensApproved)
+        console.log(tokensToApproveExchange)
         approveExchangeClick()
     }
     async function approveExchangeClick() {
@@ -302,7 +309,7 @@ export default function Home() {
         functionName: "approve",
         params: {
             guy: DexAddress,
-            wad: ethers.utils.parseEther(tokenAmount.toString()),
+            wad: ethers.utils.parseEther(tokensToApproveExchange.toString()),
         },
     })
 
@@ -372,6 +379,10 @@ export default function Home() {
                     setDepositEthAmount={setDepositEthAmount}
                     depositEthAmount={depositEthAmount}
                     tokensToApprove={tokensToApprove}
+                    tokenAmount={tokenAmount}
+                    dexDisplayed={dexDisplayed}
+                    expectedTokenAmount={expectedTokenAmount}
+                    expectedEthAmount={expectedEthAmount}
                 />
                 {isWeb3Enabled ? (
                     chainString == 5 ? (
@@ -427,17 +438,14 @@ export default function Home() {
                                             </li>
                                         </ul>
                                         <DexV1TokenToEth
-                                            onClick={handleCardClick}
                                             setTokenAmount={setTokenAmount}
                                             tokenAmount={tokenAmount}
                                             expectedEth={expectedEthAmount}
-                                            exchangeDepositTokenAmount={exchangeDepositTokenAmount}
-                                            setExchangeDepositTokenAmount={
-                                                setExchangeDepositTokenAmount
-                                            }
                                             onExchangeApproveClick={handleExchangeApproveClick}
                                             tokensToApproveExchange={tokensToApproveExchange}
                                             onExchangeTokenToEthClick={handleExchangeTokenToEth}
+                                            tokensApproved={tokensApproved}
+                                            setTokensToApproveExchange={setTokensToApproveExchange}
                                         />
                                     </div>
                                 )}
