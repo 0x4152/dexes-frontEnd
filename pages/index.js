@@ -14,6 +14,7 @@ import UpdateListingModal from "../components/updateListingModal"
 import { ethers } from "ethers"
 import DexV1EthToToken from "../components/dexV1EthToToken"
 import DexV1TokenToEth from "../components/dexV1TokenToEth"
+import Graph from "../components/graph"
 import WETHabi from "../constants/WETHabi.json"
 import Reserves from "../components/reserves"
 
@@ -46,12 +47,13 @@ export default function Home() {
         let tokenBalance = await getTokenReserves()
         let ethBalance = await getLiquidity()
         let initialEthReserves = ethBalance
+        console.log(`msgValue ${msgValue}`)
         let input_with_fee = msgValue * 997
         let numerator = tokenBalance * input_with_fee
         let denominator = initialEthReserves * 1000 + input_with_fee
         let tokensBought = numerator / denominator
 
-        console.log(ethers.utils.formatEther(tokensBought.toString()))
+        console.log(`no funcional ${ethers.utils.formatEther(tokensBought.toString())}`)
     }
     //Function that updates the amount of tokens that need to be approved to deposit "depositEthAmount" (the input in the deposit liquidity), to
     //To take exactly that amount of tokens upon depositing.
@@ -139,16 +141,24 @@ export default function Home() {
             })
         }
     }
+    ////ETH to TOKEN
     const exchangeEthToToken = () => {
         if (tokenAmount > 0) {
-            console.log("CardClick")
-            approve({
+            ethToToken({
                 onError: (error) => {
                     console.log(error)
                 },
-                onSuccess: (tx) => handleApproveSuccess(tx),
+                onSuccess: (tx) => handleEthToTokenSuccess(tx),
             })
         }
+    }
+    const handleEthToTokenSuccess = () => {
+        dispatch({
+            type: "success",
+            message: "Transaction sent - wait for transaction confirmation and refresh the page",
+            title: "ETH to Token Exchanged",
+            position: "topR",
+        })
     }
     //////////DEPOSIT//////////////////////////
     const handleDepositClick = () => {
@@ -317,10 +327,8 @@ export default function Home() {
         abi: DexABI,
         contractAddress: DexAddress,
         functionName: "ethToToken",
-        value: ethers.utils.parseEther(tokenAmount.toString()),
-        params: {
-            ethToToken: ethers.utils.parseEther(tokenAmount.toString()),
-        },
+        msgValue: ethers.utils.parseEther(tokenAmount.toString()),
+        params: {},
     })
     const { runContractFunction: tokenToEth } = useWeb3Contract({
         abi: DexABI,
@@ -376,6 +384,22 @@ export default function Home() {
                     depositTokenAmount={depositTokenAmount}
                     onDepositClick={handleDepositClick}
                     onApproveClick={handleApproveClick}
+                    setDepositEthAmount={setDepositEthAmount}
+                    depositEthAmount={depositEthAmount}
+                    tokensToApprove={tokensToApprove}
+                    tokenAmount={tokenAmount}
+                    dexDisplayed={dexDisplayed}
+                    expectedTokenAmount={expectedTokenAmount}
+                    expectedEthAmount={expectedEthAmount}
+                />
+                <Graph
+                    tokenReserves={TokenReserves}
+                    ethReserves={EthReserves}
+                    tokensApproved={tokensApproved}
+                    setDepositTokenAmount={setDepositTokenAmount}
+                    depositTokenAmount={depositTokenAmount}
+                    DexAddress={DexAddress}
+                    YeahTokenAddress={YeahTokenAddress}
                     setDepositEthAmount={setDepositEthAmount}
                     depositEthAmount={depositEthAmount}
                     tokensToApprove={tokensToApprove}

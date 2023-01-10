@@ -19,6 +19,7 @@ export default function DexV1TokenToEth({
     const { isWeb3Enabled, chainId, account } = useMoralis()
 
     function handleTokenChange(e) {
+        console.log(expectedEth)
         if (/^\d+\.*(\d+)*$/.test(e.target.value)) {
             setTokenAmount(e.target.value)
         } else if (e.target.value == "") {
@@ -42,15 +43,17 @@ export default function DexV1TokenToEth({
                             ) : (
                                 <div>
                                     <Alert severity="warning">
-                                        You have <strong>{tokensApproved} YEAH </strong>approved,
-                                        not enough for the quantity you want to exchange.
+                                        You have <strong>{" " + tokensApproved + " "} YEAH </strong>
+                                        approved, not enough for the quantity you want to exchange.
                                     </Alert>
                                     <Alert severity="info">
                                         <p className="m-4">
                                             Click on the approve button to approve this contract to
                                             manipulate
-                                            <strong>{tokensToApproveExchange}</strong>
-                                            YEAH tokens from your account.
+                                            <strong>
+                                                {" " + tokensToApproveExchange + " "}YEAH{" "}
+                                            </strong>
+                                            tokens from your account.
                                         </p>
                                     </Alert>
                                 </div>

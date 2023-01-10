@@ -63,9 +63,14 @@ export default function Reserves({
                             parseFloat(tokenReserves) - parseFloat(expectedTokenAmount),
                             expectedTokenAmount,
                         ],
+                        backgroundColor: [
+                            "rgb(180, 147, 245)",
+                            "rgb(232, 100, 97)",
+                            "rgb(110, 182, 255)",
+                            "rgb(154, 252, 175)",
+                        ],
                     },
                 ],
-                backgroundColor: ["red", "blue"],
             })
         } else {
             //tokenToEth
@@ -86,17 +91,27 @@ export default function Reserves({
                             parseFloat(tokenReserves) + parseFloat(tokenAmount),
                             parseFloat(tokenAmount),
                         ],
+                        backgroundColor: [
+                            "rgb(180, 147, 245)",
+                            "rgb(232, 100, 97)",
+                            "rgb(110, 182, 255)",
+                            "rgb(154, 252, 175)",
+                        ],
                     },
                 ],
-                backgroundColor: ["red", "blue"],
             })
         }
     }, [tokenAmount])
     useEffect(() => {
         setData({
             labels: ["ETH reserves", "YEAH reserves"],
-            datasets: [{ label: "Tokens", data: [ethReserves, tokenReserves] }],
-            backgroundColor: ["red", "blue"],
+            datasets: [
+                {
+                    label: "Tokens",
+                    data: [ethReserves, tokenReserves],
+                    backgroundColor: ["rgb(180, 147, 245)", "rgb(110, 182, 255)"],
+                },
+            ],
         })
     }, [ethReserves, tokenReserves])
     return (
@@ -105,16 +120,18 @@ export default function Reserves({
                 <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                     <div className="mb-4">
                         <label
-                            className="block text-gray-700 text-sm font-bold mb-2"
+                            className="block text-gray-700 text-xl font-bold mb-2"
                             for="username"
                         >
                             ETH / YEAH liquidity pool
-                        </label>
+                        </label>{" "}
+                        <div className="m-2 font-bold text-gray-400">
+                            Current Reserves: {parseFloat(Number(ethReserves).toFixed(5))} ETH /
+                            {" " + parseFloat(Number(tokenReserves).toFixed(5))} YEAH
+                        </div>
                     </div>
                     <div className="mb-4 p-2 px-4">
                         <Bar data={data} />
-                        <div className="m-2">{ethReserves} eth</div>
-                        <div className="m-2">{tokenReserves} yeah</div>
                         <div className="flex items-center justify-between m-2"></div>{" "}
                         <div className="">
                             <label
