@@ -19,11 +19,11 @@ export default function DexV1TokenToEth({
     const { isWeb3Enabled, chainId, account } = useMoralis()
 
     function handleTokenChange(e) {
-        console.log(expectedEth)
+        console.log(`${tokensToApproveExchange} tokens to approve exchange`)
         if (/^\d+\.*(\d+)*$/.test(e.target.value)) {
             setTokenAmount(e.target.value)
         } else if (e.target.value == "") {
-            setTokenAmount("0.1")
+            setTokenAmount("0.0")
         }
     }
 

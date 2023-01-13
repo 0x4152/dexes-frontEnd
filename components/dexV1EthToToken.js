@@ -12,7 +12,7 @@ export default function DexV1EthToToken({ onClick, setTokenAmount, tokenAmount, 
         if (/^\d+\.*(\d+)*$/.test(e.target.value)) {
             setTokenAmount(e.target.value)
         } else if (e.target.value == "") {
-            setTokenAmount("0.1")
+            setTokenAmount("0.0")
         }
     }
     return (

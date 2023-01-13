@@ -27,9 +27,8 @@ export default function Home() {
     const YeahTokenAddress = networkMapping[chainString]["YeahToken"][0]
     //stateVariables
     const [dexDisplayed, setDexDisplayed] = useState(0)
-    const [tokenAmount, setTokenAmount] = useState("0.01")
+    const [tokenAmount, setTokenAmount] = useState("0.0")
     const [depositTokenAmount, setDepositTokenAmount] = useState(0)
-    const [exchangeDepositTokenAmount, setExchangeDepositTokenAmount] = useState(0)
     const [expectedTokenAmount, setExpectedTokenAmount] = useState(0)
     const [expectedEthAmount, setexpectedEthAmount] = useState(0)
     const [TokenReserves, setTokenReserves] = useState(0)
@@ -115,7 +114,7 @@ export default function Home() {
             console.log("incorrect input")
         }
         if (/^\d+\.*(\d+)*$/.test(tokenAmount)) {
-            updateExpecteds()
+            updateExpecteds() ///////////////tokenAmount desync
         } else {
             console.log("nope")
         }
@@ -126,6 +125,7 @@ export default function Home() {
             updateUI()
         }
     }, [isWeb3Enabled])
+
     ///////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////
@@ -328,7 +328,6 @@ export default function Home() {
         contractAddress: DexAddress,
         functionName: "ethToToken",
         msgValue: ethers.utils.parseEther(tokenAmount.toString()),
-        params: {},
     })
     const { runContractFunction: tokenToEth } = useWeb3Contract({
         abi: DexABI,
