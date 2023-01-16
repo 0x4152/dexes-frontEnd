@@ -10,7 +10,6 @@ import DexABI from "../constants/DexV1abi.json"
 import YEAHABI from "../constants/YEAHabi.json"
 import WBTCabi from "../constants/WBTC.json"
 import { Card, useNotification } from "web3uikit"
-import UpdateListingModal from "../components/updateListingModal"
 import { ethers } from "ethers"
 import DexV1EthToToken from "../components/dexV1EthToToken"
 import DexV1TokenToEth from "../components/dexV1TokenToEth"
@@ -95,7 +94,7 @@ export default function Home() {
             ethToTokensBoughtCalculation()
 
             let tokensExpected = await ethToTokenView()
-            let tokensExpectedFormatted = ethers.utils.formatEther(tokensExpected)
+            let tokensExpectedFormatted = tokensExpected / 10000000000000000
             setExpectedTokenAmount(tokensExpectedFormatted)
         } else {
             let ethExpected = await tokenToEthView()
