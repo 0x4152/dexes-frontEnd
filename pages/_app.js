@@ -11,7 +11,7 @@ import { NotificationProvider } from "web3uikit"
 //})
 function MyApp({ Component, pageProps }) {
     return (
-        <div>
+        <div class=" bg-gradient-to-r from-gray-300 to-blue-500">
             <Head>
                 <title>Dexes</title>
                 <meta name="description" content="Decentralized exchanges" />

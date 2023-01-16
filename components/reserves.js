@@ -15,7 +15,7 @@ export default function Reserves({
     dexDisplayed,
     ethReserves,
     tokenReserves,
-
+    withdrawClick,
     onDepositClick,
     tokensApproved,
     onApproveClick,
@@ -56,7 +56,6 @@ export default function Reserves({
                 ],
                 datasets: [
                     {
-                        label: "Tokens",
                         data: [
                             parseFloat(ethReserves) + parseFloat(tokenAmount),
                             parseFloat(tokenAmount),
@@ -84,7 +83,6 @@ export default function Reserves({
                 ],
                 datasets: [
                     {
-                        label: "Tokens",
                         data: [
                             parseFloat(ethReserves) - parseFloat(expectedEthAmount),
                             parseFloat(expectedEthAmount),
@@ -101,13 +99,13 @@ export default function Reserves({
                 ],
             })
         }
-    }, [tokenAmount])
+    }, [tokenAmount, expectedEthAmount, expectedTokenAmount])
     useEffect(() => {
         setData({
             labels: ["ETH reserves", "YEAH reserves"],
             datasets: [
                 {
-                    label: "Tokens",
+                    label: ["Tokens"],
                     data: [ethReserves, tokenReserves],
                     backgroundColor: ["rgb(180, 147, 245)", "rgb(110, 182, 255)"],
                 },
@@ -116,7 +114,7 @@ export default function Reserves({
     }, [ethReserves, tokenReserves])
     return (
         <div>
-            <div className="w-full max-w-xl hover:bg-slate-300">
+            <div className="w-full max-w-xl min-h-4xl hover:bg-slate-300">
                 <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                     <div className="mb-4">
                         <label
@@ -133,12 +131,28 @@ export default function Reserves({
                     <div className="mb-4 p-2 px-4">
                         <Bar data={data} />
                         <div className="flex items-center justify-between m-2"></div>{" "}
+                        <div className=""></div>
+                        {showAlertDeposit ? (
+                            <Alert severity="warning">
+                                Not enough tokens approved, please approve more tokens
+                            </Alert>
+                        ) : (
+                            ""
+                        )}
+                    </div>
+                </form>
+                <p className="text-center text-gray-500 text-xs"></p>
+            </div>
+            <div className="w-full max-w-xl min-h-4xl hover:bg-slate-300">
+                <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                    <div className="mb-4">
+                        <div className="flex items-center justify-between m-2"></div>{" "}
                         <div className="">
                             <label
                                 className="block text-gray-700 text-sm font-bold mb-2"
                                 for="username"
                             >
-                                Deposit Liquidity
+                                Deposit and Withdraw Liquidity
                             </label>
                             {tokensApproved ? (
                                 tokensApproved >= tokensToApprove ? (
@@ -200,6 +214,13 @@ export default function Reserves({
                                     type="text"
                                     placeholder="0.0"
                                 />
+                                <button
+                                    onClick={onApproveClick}
+                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    type="button"
+                                >
+                                    Approve
+                                </button>
                                 {tokensApproved >= tokensToApprove && tokensApproved > 0 ? (
                                     <button
                                         onClick={onDepositClick}
@@ -217,12 +238,13 @@ export default function Reserves({
                                         Deposit
                                     </button>
                                 )}
+
                                 <button
-                                    onClick={onApproveClick}
-                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    onClick={withdrawClick}
+                                    class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                     type="button"
                                 >
-                                    Approve
+                                    Withdraw
                                 </button>
                             </div>
                         </div>
