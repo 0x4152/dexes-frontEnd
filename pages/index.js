@@ -27,7 +27,7 @@ export default function Home() {
     //stateVariables
     const [dexDisplayed, setDexDisplayed] = useState(0)
     const [reservesDisplayed, setReservesDisplayed] = useState(0)
-    const [tokenAmount, setTokenAmount] = useState(0)
+    const [tokenAmount, setTokenAmount] = useState("0.0")
     const [depositTokenAmount, setDepositTokenAmount] = useState(0)
     const [expectedTokenAmount, setExpectedTokenAmount] = useState(0)
     const [expectedEthAmount, setexpectedEthAmount] = useState(0)
