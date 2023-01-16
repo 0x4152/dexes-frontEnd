@@ -19,12 +19,21 @@ export default function DexV1TokenToEth({
     const { isWeb3Enabled, chainId, account } = useMoralis()
 
     function handleTokenChange(e) {
+        let tokenAmountVariable
         console.log(`${tokensToApproveExchange} tokens to approve exchange`)
         if (/^\d+\.*(\d+)*$/.test(e.target.value)) {
             setTokenAmount(e.target.value)
         } else if (e.target.value == "") {
             setTokenAmount("0.0")
         }
+        const { runContractFunction: tokenToEthView } = useWeb3Contract({
+            abi: DexABI,
+            contractAddress: DexAddress,
+            functionName: "tokenToEthView",
+            params: {
+                tokens: ethers.utils.parseEther(tokenAmountVariable.toString()),
+            },
+        })
     }
 
     return (

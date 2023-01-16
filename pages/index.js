@@ -38,7 +38,6 @@ export default function Home() {
     const [tokensToApproveExchange, setTokensToApproveExchange] = useState(0)
     const [depositEthAmount, setDepositEthAmount] = useState(0)
     const [tokenAmountToApproveFinal, setTokenAmountToApproveFinal] = useState(0)
-    const [tokenToEthExchangeViable, setTokenToEthExchangeViable] = useState(false)
     //calculations
     async function ethToTokensBoughtCalculation() {
         let msgValue = ethers.utils.parseEther(tokenAmount)
@@ -64,15 +63,6 @@ export default function Home() {
             setTokenAmountToApproveFinal(tokenAmountToDeposit)
         } else {
             setTokensToApprove(0)
-        }
-    }
-
-    function updateDiffTokensApproved() {
-        if (tokensApproved < tokenAmount) {
-            setTokensToApproveExchange(tokenAmount - tokensApproved)
-            setTokenToEthExchangeViable(false)
-        } else {
-            setTokenToEthExchangeViable(true)
         }
     }
 
