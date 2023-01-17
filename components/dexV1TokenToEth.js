@@ -19,21 +19,11 @@ export default function DexV1TokenToEth({
     const { isWeb3Enabled, chainId, account } = useMoralis()
 
     function handleTokenChange(e) {
-        let tokenAmountVariable
-        console.log(`${tokensToApproveExchange} tokens to approve exchange`)
         if (/^\d+\.*(\d+)*$/.test(e.target.value)) {
             setTokenAmount(e.target.value)
         } else if (e.target.value == "") {
-            setTokenAmount("0.0")
+            setTokenAmount(0)
         }
-        const { runContractFunction: tokenToEthView } = useWeb3Contract({
-            abi: DexABI,
-            contractAddress: DexAddress,
-            functionName: "tokenToEthView",
-            params: {
-                tokens: ethers.utils.parseEther(tokenAmountVariable.toString()),
-            },
-        })
     }
 
     return (
@@ -82,7 +72,7 @@ export default function DexV1TokenToEth({
                             value={tokenAmount ? tokenAmount : ""}
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="username"
-                            type="text"
+                            type="number"
                             placeholder="0.0"
                         />
                     </div>

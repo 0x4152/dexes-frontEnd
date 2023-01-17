@@ -12,7 +12,7 @@ export default function DexV1EthToToken({ onClick, setTokenAmount, tokenAmount, 
         if (/^\d+\.*(\d+)*$/.test(e.target.value)) {
             setTokenAmount(e.target.value)
         } else if (e.target.value == "") {
-            setTokenAmount("0.0")
+            setTokenAmount(0)
         }
     }
     return (
@@ -31,7 +31,7 @@ export default function DexV1EthToToken({ onClick, setTokenAmount, tokenAmount, 
                             value={tokenAmount ? tokenAmount : ""}
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="username"
-                            type="text"
+                            type="number"
                             placeholder="0"
                         />
                     </div>

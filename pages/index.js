@@ -26,8 +26,8 @@ export default function Home() {
     const YeahTokenAddress = networkMapping[chainString]["YeahToken"][0]
     //stateVariables
     const [dexDisplayed, setDexDisplayed] = useState(0)
-    const [reservesDisplayed, setReservesDisplayed] = useState(0)
-    const [tokenAmount, setTokenAmount] = useState("0.0")
+    const [reservesDisplayed, setReservesDisplayed] = useState(1)
+    const [tokenAmount, setTokenAmount] = useState(0)
     const [depositTokenAmount, setDepositTokenAmount] = useState(0)
     const [expectedTokenAmount, setExpectedTokenAmount] = useState(0)
     const [expectedEthAmount, setexpectedEthAmount] = useState(0)
@@ -40,27 +40,24 @@ export default function Home() {
     const [tokenAmountToApproveFinal, setTokenAmountToApproveFinal] = useState(0)
     //calculations
     async function ethToTokensBoughtCalculation() {
-        let msgValue = ethers.utils.parseEther(tokenAmount)
+        let msgValue = ethers.utils.parseEther(tokenAmount.toString())
 
         let tokenBalance = await getTokenReserves()
         let ethBalance = await getLiquidity()
         let initialEthReserves = ethBalance
-        console.log(`msgValue ${msgValue}`)
         let input_with_fee = msgValue * 997
         let numerator = tokenBalance * input_with_fee
         let denominator = initialEthReserves * 1000 + input_with_fee
         let tokensBought = numerator / denominator
-
-        console.log(`no funcional ${ethers.utils.formatEther(tokensBought.toString())}`)
     }
     //Function that updates the amount of tokens that need to be approved to deposit "depositEthAmount" (the input in the deposit liquidity), to
     //To take exactly that amount of tokens upon depositing.
     function updateDepositTokensCalculation() {
-        if (depositEthAmount) {
+        if (depositEthAmount > 0) {
             let tokenAmountToDeposit =
                 (depositEthAmount * TokenReserves) / EthReserves + 1 / 1000000000000000000
             setTokensToApprove(tokenAmountToDeposit)
-            setTokenAmountToApproveFinal(tokenAmountToDeposit)
+            setTokenAmountToApproveFinal(tokenAmountToDeposit + 0.0000000002)
         } else {
             setTokensToApprove(0)
         }
@@ -72,10 +69,10 @@ export default function Home() {
         let allowanceFormatted = allowanceUnformatted / 1000000000000000000
         setTokensApproved(allowanceFormatted)
         let liquidity = await getLiquidity()
-        let liquidityFormatted = ethers.utils.formatEther(liquidity).toString()
+        let liquidityFormatted = ethers.utils.formatEther(liquidity.toString())
         setEthReserves(liquidityFormatted)
         let tokenReserves = await getTokenReserves()
-        let tokenReservesFormatted = ethers.utils.formatEther(tokenReserves)
+        let tokenReservesFormatted = ethers.utils.formatEther(tokenReserves.toString())
         setTokenReserves(tokenReservesFormatted)
     }
     //Function called onChange when introducing correct input
@@ -84,7 +81,7 @@ export default function Home() {
             ethToTokensBoughtCalculation()
 
             let tokensExpected = await ethToTokenView()
-            let tokensExpectedFormatted = tokensExpected / 10000000000000000
+            let tokensExpectedFormatted = tokensExpected / 1000000000000000000
             setExpectedTokenAmount(tokensExpectedFormatted)
         } else {
             let ethExpected = await tokenToEthView()
@@ -95,7 +92,7 @@ export default function Home() {
 
     useEffect(() => {
         if (tokenAmount > tokensApproved) {
-            setTokensToApproveExchange(tokenAmount)
+            setTokensToApproveExchange(tokenAmount + 0.0000000000000002)
         }
 
         if (/^\d+\.*(\d+)*$/.test(depositTokenAmount)) {
@@ -108,7 +105,14 @@ export default function Home() {
         } else {
             console.log("nope")
         }
-    }, [tokenAmount, isWeb3Enabled, depositEthAmount, expectedEthAmount])
+    }, [
+        tokenAmount,
+        isWeb3Enabled,
+        depositEthAmount,
+        expectedEthAmount,
+        expectedTokenAmount,
+        tokenAmountToApproveFinal,
+    ])
 
     useEffect(() => {
         if (isWeb3Enabled) {
@@ -325,9 +329,7 @@ export default function Home() {
         abi: DexABI,
         contractAddress: DexAddress,
         functionName: "deposit",
-        msgValue: depositEthAmount
-            ? ethers.utils.parseEther(depositEthAmount.toString()).toString()
-            : "0",
+        msgValue: depositEthAmount ? ethers.utils.parseEther(depositEthAmount.toString()) : "0",
         params: {},
     })
     const { runContractFunction: withdraw } = useWeb3Contract({
@@ -335,7 +337,7 @@ export default function Home() {
         contractAddress: DexAddress,
         functionName: "withdraw",
 
-        params: { amount: ethers.utils.parseEther(depositEthAmount.toString()).toString() },
+        params: { amount: ethers.utils.parseEther(depositEthAmount.toString()) },
     })
     const { runContractFunction: approveExchange } = useWeb3Contract({
         abi: WETHabi,
@@ -343,7 +345,7 @@ export default function Home() {
         functionName: "approve",
         params: {
             guy: DexAddress,
-            wad: ethers.utils.parseEther(tokensToApproveExchange.toString()),
+            wad: ethers.utils.parseEther(tokenAmount.toString()),
         },
     })
 
@@ -376,7 +378,7 @@ export default function Home() {
         functionName: "ethToTokenView",
 
         params: {
-            msgValue: ethers.utils.parseEther(tokenAmount).toString(),
+            msgValue: ethers.utils.parseEther(tokenAmount.toString()),
         },
     })
     const { runContractFunction: getLiquidity } = useWeb3Contract({

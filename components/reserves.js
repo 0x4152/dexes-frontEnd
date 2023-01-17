@@ -39,7 +39,7 @@ export default function Reserves({
             }
             setDepositEthAmount(e.target.value)
         } else if (e.target.value == "") {
-            setDepositEthAmount(1)
+            setDepositEthAmount(0)
         }
     }
     useEffect(() => {

@@ -13,6 +13,7 @@ export default function Graph({
     ethReserves,
     tokenReserves,
     expectedEthAmount,
+    expectedTokenAmount,
 }) {
     const [graphData, setGraphData] = useState(0)
     const [data, setData] = useState({
@@ -250,26 +251,92 @@ export default function Graph({
 
     return (
         <div>
-            <div className="w-full max-w-5xl hover:bg-slate-300">
+            <div className="w-full max-w-7xl hover:bg-slate-300">
                 <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                     <div className="mb-4">
                         <label
                             className="block text-gray-700 text-xl font-bold mb-2"
                             for="username"
                         >
-                            ETH / YEAH liquidity pool
+                            ETH / YEAH Liquidity Pool
                         </label>{" "}
                         <div className="m-2 font-bold text-gray-400">
                             Current Reserves: {parseFloat(Number(ethReserves).toFixed(5))} ETH/
                             {parseFloat(Number(tokenReserves).toFixed(5))} YEAH
                         </div>
+                        {tokenAmount ? (
+                            <>
+                                {dexDisplayed ? (
+                                    //eth to token
+                                    <div>
+                                        <div className="m-2 font-bold text-gray-400">
+                                            Average Price of Eth bought:{" "}
+                                            {parseFloat(Number(expectedTokenAmount).toFixed(5)) /
+                                                parseFloat(Number(tokenAmount).toFixed(5))}{" "}
+                                            ETH / YEAH
+                                        </div>
+                                    </div>
+                                ) : (
+                                    //token to eth
+                                    <div>
+                                        <div className="m-2 font-bold text-gray-400">
+                                            Average Price of Eth bought:{" "}
+                                            {parseFloat(Number(expectedEthAmount).toFixed(5)) /
+                                                parseFloat(Number(tokenAmount).toFixed(5))}{" "}
+                                            ETH / YEAH
+                                        </div>
+                                    </div>
+                                )}
+                            </>
+                        ) : (
+                            <></>
+                        )}
                     </div>
                     <div className="mb-4 p-2 px-4">
                         <Scatter data={data} />
+                        <div className="mb-4"></div>
                         <div className="flex items-center justify-between m-2"></div>{" "}
                         <div className=""></div>
                     </div>
-                    <p className="text-center text-gray-500 text-xs"></p>
+                    <p className="text-left text-gray-700 text-s"> What is a liquidity pool?</p>
+                    <p className="text-left text-gray-500 text-s">
+                        {" "}
+                        A liquidity pool is a smart contract that holds two assets to facilitate
+                        exchanges between these assets in a decentralized manner.
+                    </p>
+                    <p className="text-left text-gray-700 text-s"> Why is it useful?</p>
+                    <p className="text-left text-gray-500 text-s">
+                        {" "}
+                        Its a way of bypassing a traditional order-book exchange system, where
+                        buyers are matched with sellers to facilitate exhanges. This kind of system
+                        isn't optimal for a decentralized platform, therefore a new system was
+                        created that leverages math and market participants to give a fair market
+                        value to anyone that desires to trade a pair of assets, without relying on
+                        external parties.
+                    </p>
+                    <p className="text-left text-gray-700 text-s"> Why i?</p>
+                    <p className="text-left text-gray-500 text-s">
+                        {" "}
+                        Its a way of bypassing a traditional order-book exchange system, where
+                        buyers are matched with sellers to facilitate exhanges. This kind of system
+                        isn't optimal for a decentralized platform, therefore a new system was
+                        created that leverages math and market participants to give a fair market
+                        value to anyone that desires to trade a pair of assets.
+                    </p>
+                    <p className="text-center text-gray-500 text-xs">
+                        {" "}
+                        This graph is a representation of the Liquidity Pool balances, and how they
+                        change when exchange, deposit liquidity and withdraw liquidity transactions
+                        are executed.
+                    </p>
+                    <p className="text-center text-gray-500 text-xs">
+                        {" "}
+                        The exchange price is determined by a constant product market maker, a
+                        formula that based on the reserves of tokens in the pool will regulate the
+                        amount of tokens exchanged for an amount of ether and viceversa.
+                    </p>
+                    <p className="text-center text-gray-500 text-s font-bold">x * y = k </p>
+                    <p className="text-center text-gray-500 text-xs"> </p>
                 </form>
             </div>
         </div>
