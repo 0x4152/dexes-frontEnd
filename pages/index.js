@@ -9,6 +9,7 @@ import networkMapping from "../constants/networkMapping.json"
 import DexABI from "../constants/DexV1abi.json"
 import YEAHABI from "../constants/YEAHabi.json"
 import WBTCabi from "../constants/WBTC.json"
+import LPTokenabi from "../constants/LPTokenabi.json"
 import { Card, useNotification } from "web3uikit"
 import { ethers } from "ethers"
 import DexV1EthToToken from "../components/dexV1EthToToken"
@@ -16,6 +17,8 @@ import DexV1TokenToEth from "../components/dexV1TokenToEth"
 import Graph from "../components/graph"
 import WETHabi from "../constants/WETHabi.json"
 import Reserves from "../components/reserves"
+import Explanation from "../components/expl"
+import { letterSpacing } from "@mui/system"
 
 export default function Home() {
     const dispatch = useNotification()
@@ -24,6 +27,7 @@ export default function Home() {
 
     const DexAddress = networkMapping[chainString]["DexV1"][0]
     const YeahTokenAddress = networkMapping[chainString]["YeahToken"][0]
+    const LPTokenAddress = networkMapping[chainString]["LPToken"][0]
     //stateVariables
     const [dexDisplayed, setDexDisplayed] = useState(0)
     const [reservesDisplayed, setReservesDisplayed] = useState(1)
@@ -32,6 +36,7 @@ export default function Home() {
     const [expectedTokenAmount, setExpectedTokenAmount] = useState(0)
     const [expectedEthAmount, setexpectedEthAmount] = useState(0)
     const [TokenReserves, setTokenReserves] = useState(0)
+    const [LPTokens, setLPTokens] = useState(0)
     const [EthReserves, setEthReserves] = useState(0)
     const [tokensApproved, setTokensApproved] = useState(0)
     const [tokensToApprove, setTokensToApprove] = useState(0)
@@ -77,6 +82,10 @@ export default function Home() {
     }
     //Function called onChange when introducing correct input
     async function updateExpecteds() {
+        let LPTokens = await balanceOf()
+        let LPTokensFormatted = parseFloat(LPTokens) / 1000000000000000000
+        setLPTokens(LPTokensFormatted)
+        console.log(`LPTokensFormatted${LPTokensFormatted}`)
         if (dexDisplayed) {
             ethToTokensBoughtCalculation()
 
@@ -316,6 +325,14 @@ export default function Home() {
             _spender: DexAddress,
         },
     })
+    const { runContractFunction: balanceOf } = useWeb3Contract({
+        abi: LPTokenabi,
+        contractAddress: LPTokenAddress,
+        functionName: "balanceOf",
+        params: {
+            account: account,
+        },
+    })
     const { runContractFunction: approveDeposit } = useWeb3Contract({
         abi: WETHabi,
         contractAddress: YeahTokenAddress,
@@ -396,15 +413,15 @@ export default function Home() {
         params: {},
     })
     return (
-        <div className="container mx-auto">
+        <div className="container mx-1">
             <h1 className="py-4 px-4 font-bold text-2xl">
                 {chainString != 5 ? "Please connect to the Göerli testnet" : ""}
             </h1>
-            <div className="space-x-6 mx-6 flex">
+            <div className="mx-1  flex">
                 {" "}
                 {isWeb3Enabled ? (
                     chainString == 5 ? (
-                        <div className="justify-center container">
+                        <div className=" container w-100 mx-12">
                             <div>
                                 {dexDisplayed ? (
                                     <div>
@@ -519,6 +536,8 @@ export default function Home() {
                                             expectedTokenAmount={expectedTokenAmount}
                                             expectedEthAmount={expectedEthAmount}
                                             withdrawClick={handleWithdrawClick}
+                                            LPTokens={LPTokens}
+                                            LPTokenAddress={LPTokenAddress}
                                         />
                                     </div>
                                 ) : (
@@ -557,6 +576,8 @@ export default function Home() {
                                             dexDisplayed={dexDisplayed}
                                             expectedTokenAmount={expectedTokenAmount}
                                             expectedEthAmount={expectedEthAmount}
+                                            setTokenAmount={setTokenAmount}
+                                            setDexDisplayed={setDexDisplayed}
                                         />
                                     </div>
                                 )}

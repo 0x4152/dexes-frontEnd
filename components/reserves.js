@@ -24,6 +24,8 @@ export default function Reserves({
     tokensToApprove,
     expectedEthAmount,
     expectedTokenAmount,
+    LPTokens,
+    LPTokenAddress,
 }) {
     const { isWeb3Enabled, chainId, account } = useMoralis()
     const [data, setData] = useState({
@@ -49,23 +51,30 @@ export default function Reserves({
             console.log(expectedTokenAmount)
             setData({
                 labels: [
+                    "Current ETH reserves",
                     "ETH reserves after trade",
                     "ETH exchanged",
+                    "Current YEAH reserves",
                     "YEAH reserves after trade",
                     "YEAH tokens returned",
                 ],
                 datasets: [
                     {
+                        label: "Tokens",
                         data: [
+                            parseFloat(ethReserves),
                             parseFloat(ethReserves) + parseFloat(tokenAmount),
                             parseFloat(tokenAmount),
+                            parseFloat(tokenReserves),
                             parseFloat(tokenReserves) - parseFloat(expectedTokenAmount),
                             expectedTokenAmount,
                         ],
                         backgroundColor: [
                             "rgb(180, 147, 245)",
+                            "rgb(223, 182, 242)",
                             "rgb(232, 100, 97)",
                             "rgb(110, 182, 255)",
+                            "rgb(150, 172, 250)",
                             "rgb(154, 252, 175)",
                         ],
                     },
@@ -76,24 +85,31 @@ export default function Reserves({
             console.log(" token to eth")
             setData({
                 labels: [
+                    "Current ETH reserves",
                     "ETH reserves after trade",
                     "ETH returned",
+                    "Current YEAH reserves",
                     "YEAH reserves after trade",
                     "YEAH Tokens exchanged",
                 ],
                 datasets: [
                     {
+                        label: "Tokens",
                         data: [
+                            parseFloat(ethReserves),
                             parseFloat(ethReserves) - parseFloat(expectedEthAmount),
                             parseFloat(expectedEthAmount),
+                            parseFloat(tokenReserves),
                             parseFloat(tokenReserves) + parseFloat(tokenAmount),
                             parseFloat(tokenAmount),
                         ],
                         backgroundColor: [
                             "rgb(180, 147, 245)",
-                            "rgb(232, 100, 97)",
-                            "rgb(110, 182, 255)",
+                            "rgb(223, 182, 242)",
                             "rgb(154, 252, 175)",
+                            "rgb(110, 182, 255)",
+                            "rgb(150, 172, 250)",
+                            "rgb(232, 100, 97)",
                         ],
                     },
                 ],
@@ -149,10 +165,23 @@ export default function Reserves({
                         <div className="flex items-center justify-between m-2"></div>{" "}
                         <div className="">
                             <label
-                                className="block text-gray-700 text-sm font-bold mb-2"
+                                className="block text-gray-700 text-xl font-bold mb-2"
                                 for="username"
                             >
                                 Deposit and Withdraw Liquidity
+                            </label>
+
+                            <label
+                                className="block text-gray-500 text-m font-bold mb-2"
+                                for="username"
+                            >
+                                You own {LPTokens} LP tokens.
+                            </label>
+                            <label
+                                className="block text-gray-500 text-xs font-bold mb-2"
+                                for="username"
+                            >
+                                LP token address: {LPTokenAddress}
                             </label>
                             {tokensApproved ? (
                                 tokensApproved >= tokensToApprove ? (

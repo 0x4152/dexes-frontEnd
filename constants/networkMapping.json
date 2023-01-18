@@ -1,26 +1,35 @@
 {
     "1": {
         "DexV1": [
-            "0x2C51aBdb2eD665D604ba313aAc050938974D4747"
+            "0x814e3fe495d700d7F067D2FC54ab8377a571d57d"
         ],
         "YeahToken": [
             "0xD02f877E7c9748B69729ACf39949C12A8D529B5c"
+        ],
+        "LPToken": [
+            "0x4E954CA713Eb12dF12f57ccBDAbC312f91922f12"
         ]
     },
     "5": {
         "DexV1": [
-            "0x2C51aBdb2eD665D604ba313aAc050938974D4747"
+            "0x814e3fe495d700d7F067D2FC54ab8377a571d57d"
         ],
         "YeahToken": [
             "0xD02f877E7c9748B69729ACf39949C12A8D529B5c"
+        ],
+        "LPToken": [
+            "0x4E954CA713Eb12dF12f57ccBDAbC312f91922f12"
         ]
     },
     "1337": {
         "DexV1": [
-            "0x2C51aBdb2eD665D604ba313aAc050938974D4747"
+            "0x814e3fe495d700d7F067D2FC54ab8377a571d57d"
         ],
         "YeahToken": [
             "0xD02f877E7c9748B69729ACf39949C12A8D529B5c"
+        ],
+        "LPToken": [
+            "0x4E954CA713Eb12dF12f57ccBDAbC312f91922f12"
         ]
     }
 }
