@@ -17,6 +17,7 @@ function MyApp({ Component, pageProps }) {
                 <meta name="description" content="Decentralized exchanges" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
+
             <MoralisProvider initializeOnMount={false}>
                 <NotificationProvider>
                     <Header />

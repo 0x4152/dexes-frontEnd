@@ -26,6 +26,8 @@ export default function Reserves({
     expectedTokenAmount,
     LPTokens,
     LPTokenAddress,
+    withdrawAmount,
+    setWithdrawAmount,
 }) {
     const { isWeb3Enabled, chainId, account } = useMoralis()
     const [data, setData] = useState({
@@ -34,6 +36,7 @@ export default function Reserves({
         backgroundColor: ["red"],
     })
     const [showAlertDeposit, setShowAlertDeposit] = useState(false)
+    const [showAlertWithdraw, setShowAlertWithdraw] = useState(false)
     function handleDepositChange(e) {
         if (/^\d+\.*(\d+)*$/.test(e.target.value)) {
             if (tokensApproved >= tokensToApprove) {
@@ -42,6 +45,16 @@ export default function Reserves({
             setDepositEthAmount(e.target.value)
         } else if (e.target.value == "") {
             setDepositEthAmount(0)
+        }
+    }
+    function handleWithdrawChange(e) {
+        if (/^\d+\.*(\d+)*$/.test(e.target.value)) {
+            if (LPTokens >= withdrawAmount) {
+                setShowAlertWithdraw(false)
+            }
+            setWithdrawAmount(e.target.value)
+        } else if (e.target.value == "") {
+            setWithdrawAmount(0)
         }
     }
     useEffect(() => {
@@ -175,7 +188,7 @@ export default function Reserves({
                                 className="block text-gray-500 text-m font-bold mb-2"
                                 for="username"
                             >
-                                You own {LPTokens} LP tokens.
+                                You own {parseFloat(Number(LPTokens).toFixed(5))} LP tokens.
                             </label>
                             <label
                                 className="block text-gray-500 text-xs font-bold mb-2"
@@ -233,15 +246,14 @@ export default function Reserves({
                                     </p>
                                 </Alert>
                             )}
-
-                            <div className="flex">
+                            <div className="flex my-2">
                                 <input
                                     onChange={handleDepositChange}
                                     value={depositEthAmount ? depositEthAmount : ""}
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="username"
                                     type="text"
-                                    placeholder="0.0"
+                                    placeholder="ETH amount to deposit"
                                 />
                                 <button
                                     onClick={onApproveClick}
@@ -267,19 +279,47 @@ export default function Reserves({
                                         Deposit
                                     </button>
                                 )}
+                            </div>
+                        </div>
+                        <div className="flex my-2">
+                            <input
+                                onChange={handleWithdrawChange}
+                                value={withdrawAmount ? withdrawAmount : ""}
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id="username"
+                                type="text"
+                                placeholder="LP token amount to withdraw"
+                            />
 
+                            {LPTokens > withdrawAmount ? (
                                 <button
                                     onClick={withdrawClick}
-                                    class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                     type="button"
                                 >
                                     Withdraw
                                 </button>
-                            </div>
+                            ) : (
+                                <button
+                                    onClick={() => setShowAlertWithdraw(true)}
+                                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    type="button"
+                                >
+                                    Withdraw
+                                </button>
+                            )}
                         </div>
                         {showAlertDeposit ? (
                             <Alert severity="warning">
                                 Not enough tokens approved, please approve more tokens
+                            </Alert>
+                        ) : (
+                            ""
+                        )}
+                        {showAlertWithdraw ? (
+                            <Alert severity="warning">
+                                You haven't got enough enough LP tokens, try something below{" "}
+                                {parseFloat(Number(LPTokens).toFixed(5))}
                             </Alert>
                         ) : (
                             ""

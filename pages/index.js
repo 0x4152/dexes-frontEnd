@@ -43,6 +43,7 @@ export default function Home() {
     const [tokensToApproveExchange, setTokensToApproveExchange] = useState(0)
     const [depositEthAmount, setDepositEthAmount] = useState(0)
     const [tokenAmountToApproveFinal, setTokenAmountToApproveFinal] = useState(0)
+    const [withdrawAmount, setWithdrawAmount] = useState(0)
     //calculations
     async function ethToTokensBoughtCalculation() {
         let msgValue = ethers.utils.parseEther(tokenAmount.toString())
@@ -121,6 +122,7 @@ export default function Home() {
         expectedEthAmount,
         expectedTokenAmount,
         tokenAmountToApproveFinal,
+        withdrawAmount,
     ])
 
     useEffect(() => {
@@ -418,7 +420,6 @@ export default function Home() {
                 {chainString != 5 ? "Please connect to the Göerli testnet" : ""}
             </h1>
             <div className="mx-1  flex">
-                {" "}
                 {isWeb3Enabled ? (
                     chainString == 5 ? (
                         <div className=" container w-100 mx-12">
@@ -538,6 +539,8 @@ export default function Home() {
                                             withdrawClick={handleWithdrawClick}
                                             LPTokens={LPTokens}
                                             LPTokenAddress={LPTokenAddress}
+                                            withdrawAmount={withdrawAmount}
+                                            setWithdrawAmount={setWithdrawAmount}
                                         />
                                     </div>
                                 ) : (
