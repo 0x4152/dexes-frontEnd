@@ -83,7 +83,7 @@ export default function DexV1TokenToEth({
                         {tokensApproved >= tokenAmount && tokensApproved > 0 ? (
                             <button
                                 onClick={onExchangeTokenToEthClick}
-                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                 type="button"
                             >
                                 Exchange
@@ -99,7 +99,7 @@ export default function DexV1TokenToEth({
                         )}
                         <button
                             onClick={onExchangeApproveClick}
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            class="bg-violet-700 hover:bg-violet-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                             type="button"
                         >
                             Approve

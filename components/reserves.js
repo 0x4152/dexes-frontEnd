@@ -86,8 +86,8 @@ export default function Reserves({
                             "rgb(180, 147, 245)",
                             "rgb(223, 182, 242)",
                             "rgb(232, 100, 97)",
-                            "rgb(110, 182, 255)",
-                            "rgb(150, 172, 250)",
+                            "rgb(38, 28, 77)",
+                            "rgb(44, 23, 120)",
                             "rgb(154, 252, 175)",
                         ],
                     },
@@ -120,8 +120,8 @@ export default function Reserves({
                             "rgb(180, 147, 245)",
                             "rgb(223, 182, 242)",
                             "rgb(154, 252, 175)",
-                            "rgb(110, 182, 255)",
-                            "rgb(150, 172, 250)",
+                            "rgb(38, 28, 77)",
+                            "rgb(44, 23, 120)",
                             "rgb(232, 100, 97)",
                         ],
                     },
@@ -136,7 +136,7 @@ export default function Reserves({
                 {
                     label: ["Tokens"],
                     data: [ethReserves, tokenReserves],
-                    backgroundColor: ["rgb(180, 147, 245)", "rgb(110, 182, 255)"],
+                    backgroundColor: ["rgb(180, 147, 245)", "rgb(38, 28, 77)"],
                 },
             ],
         })
@@ -257,7 +257,7 @@ export default function Reserves({
                                 />
                                 <button
                                     onClick={onApproveClick}
-                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    class="bg-violet-700 hover:bg-violet-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                     type="button"
                                 >
                                     Approve
@@ -265,7 +265,7 @@ export default function Reserves({
                                 {tokensApproved >= tokensToApprove && tokensApproved > 0 ? (
                                     <button
                                         onClick={onDepositClick}
-                                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                        class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                         type="button"
                                     >
                                         Deposit
@@ -294,7 +294,7 @@ export default function Reserves({
                             {LPTokens > withdrawAmount ? (
                                 <button
                                     onClick={withdrawClick}
-                                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    class="bg-violet-400 hover:bg-violet-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                     type="button"
                                 >
                                     Withdraw

@@ -29,24 +29,37 @@ export default function Home() {
     const DexAddress = networkMapping[chainString]["DexV1"][0]
     const YeahTokenAddress = networkMapping[chainString]["YeahToken"][0]
     const LPTokenAddress = networkMapping[chainString]["LPToken"][0]
-    const tokenControlAddress = 0x0428be3c63277a1244fc1e610e9f2d9d5cf089fd
+    const tokenControlAddress = networkMapping[chainString]["TokenControl"][0]
     //stateVariables
     const [owners, setOwners] = useState(0)
     const [txCount, setTxCount] = useState(0)
     const [lastTxIndex, setLastTxIndex] = useState(0)
+    const [inputIndex, setInputIndex] = useState(0)
+    const [txInfo, setTxInfo] = useState({ txIndex: 0, numConfirmations: 0, executed: false })
 
+    const [isOwner, setIsOwner] = useState(false)
     //calculations
 
     //useEffect
     async function updateUI() {
         let _owners = await getOwners()
-
+        for (let i = 0; i < _owners.length; i++) {
+            if (account.toString == _owners[0].toString) {
+                setIsOwner(true)
+            }
+        }
         setOwners(_owners)
         let _txCount = await getTransactionCount()
 
         setTxCount(_txCount)
         let _lastTxIndex = await getLastTxIndex()
         setLastTxIndex(_lastTxIndex)
+        let transactionInfo = await getTransaction()
+        setTxInfo({
+            txIndex: inputIndex ? inputIndex : Number(lastTxIndex),
+            numConfirmations: Number(transactionInfo[4]),
+            executed: transactionInfo[3],
+        })
     }
 
     useEffect(() => {}, [])
@@ -163,6 +176,14 @@ export default function Home() {
         })
     }
     //contract functions
+    const { runContractFunction: getTransaction } = useWeb3Contract({
+        abi: tokenControlAbi,
+        contractAddress: tokenControlAddress,
+        functionName: "getTransaction",
+        params: {
+            _txIndex: inputIndex ? inputIndex : lastTxIndex,
+        },
+    })
     const { runContractFunction: getLastTxIndex } = useWeb3Contract({
         abi: tokenControlAbi,
         contractAddress: tokenControlAddress,
@@ -175,6 +196,7 @@ export default function Home() {
         functionName: "getOwners",
         params: {},
     })
+
     const { runContractFunction: getTransactionCount } = useWeb3Contract({
         abi: tokenControlAbi,
         contractAddress: tokenControlAddress,
@@ -186,7 +208,7 @@ export default function Home() {
         contractAddress: tokenControlAddress,
         functionName: "addOwner",
         params: {
-            newOwner: account,
+            newOwner: account ? account : "0x8B5b52af3b1326236f9C09954f0a3A106d0aB92D",
         },
     })
     const { runContractFunction: confirmTransaction } = useWeb3Contract({
@@ -223,11 +245,131 @@ export default function Home() {
         },
     })
     return (
-        <div className="container mx-1">
+        <div className="container mx-1 min-h-screen">
             {" "}
             {isWeb3Enabled ? (
                 chainString == 5 ? (
-                    <div>all good </div>
+                    <div>
+                        <div className="w-full max-w-xl min-h-4xl hover:bg-slate-300">
+                            <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                                <div>
+                                    {" "}
+                                    <label
+                                        className="block text-gray-700 text-sm font-bold mb-2"
+                                        for="username"
+                                    >
+                                        Yeah Token Multi-Sig
+                                    </label>
+                                    <p>
+                                        This Dapp interacts with a smart contract that controls the
+                                        minting of YEAH tokens.{" "}
+                                    </p>
+                                    <p>
+                                        To be able to interact with this multi-sig you will have to
+                                        become an owner. Click on the "become owner" button to be
+                                        able to interact with the multi-sig{" "}
+                                    </p>
+                                    <p>
+                                        Once you are an owner you will be able to queue
+                                        transactions, confirm and revoke your confirmation, and
+                                        lastly execute those transactions.
+                                    </p>
+                                    <p>
+                                        To execute a transaction the transaction needs 2
+                                        confirmations from the owners. You can check the number of
+                                        transactions on the transaction info.
+                                    </p>
+                                    <p></p>
+                                </div>
+                            </form>
+                            <p className="text-center text-gray-500 text-xs"></p>
+                        </div>{" "}
+                        <div className="w-full max-w-xl min-h-4xl hover:bg-slate-300">
+                            <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                                <div>
+                                    {" "}
+                                    <label
+                                        className="block text-gray-700 text-sm font-bold mb-2"
+                                        for="username"
+                                    >
+                                        Step by Step
+                                    </label>
+                                    <p>
+                                        1. Click add my account to owners. Wait for the transaction
+                                        to be included in a block.
+                                    </p>
+                                    <p>
+                                        2. Click mint 1 YEAH. This will queue a transaction, it will
+                                        then be possible to confirm the transaction.
+                                    </p>
+                                    <p>
+                                        3. Click "Confirm the transaction" inputing the transaction
+                                        index you just created.
+                                    </p>
+                                    <p>
+                                        4. The transaction will need two confirmations to be
+                                        executable. For testing purposes repeat step 1 and step 3,
+                                        inputing the same tx
+                                    </p>{" "}
+                                    <p>
+                                        5. Once the transaction has two confirmations, it can be
+                                        executed, minting 1 Yeah token to the account that called
+                                        the mint function.
+                                    </p>
+                                    <p></p>
+                                </div>
+                            </form>
+                            <p className="text-center text-gray-500 text-xs"></p>
+                        </div>{" "}
+                        <div className="w-full max-w-xl min-h-4xl hover:bg-slate-300">
+                            <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                                <div>
+                                    {isOwner ? (
+                                        <button
+                                            onClick={() => console.log("already an owner")}
+                                            class="bg-violet-400 hover:bg-violet-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                            type="button"
+                                        >
+                                            You are already an Owner!
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={handleAddOwnerClick}
+                                            class="bg-violet-400 hover:bg-violet-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                            type="button"
+                                        >
+                                            Become a Multi-Sig owner
+                                        </button>
+                                    )}
+                                </div>
+                            </form>
+                            <p className="text-center text-gray-500 text-xs"></p>
+                        </div>
+                        <div className="w-full max-w-xl min-h-4xl hover:bg-slate-300">
+                            <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                                <div>
+                                    <p className="text-center text-gray-500 text-xs">
+                                        Transaction {txInfo.txIndex}
+                                    </p>
+                                    <p className="text-center text-gray-500 text-xs">
+                                        Confirmations on this transaction: {txInfo.numConfirmations}
+                                    </p>
+                                    <p className="text-center text-gray-500 text-xs">
+                                        {txInfo.executed ? (
+                                            <div>
+                                                Transaction {txInfo.txIndex} has been executed
+                                            </div>
+                                        ) : (
+                                            <div>
+                                                Transaction {txInfo.txIndex} has not been executed
+                                            </div>
+                                        )}
+                                    </p>
+                                </div>
+                            </form>
+                            <p className="text-center text-gray-500 text-xs"></p>
+                        </div>
+                    </div>
                 ) : (
                     <div> not in goerli</div>
                 )

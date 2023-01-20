@@ -415,21 +415,26 @@ export default function Home() {
         params: {},
     })
     return (
-        <div className="container mx-1">
-            <h1 className="py-4 px-4 font-bold text-2xl">
-                {chainString != 5 ? "Please connect to the Göerli testnet" : ""}
-            </h1>
-            <div className="mx-1  flex">
+        <div className="container mx-1 min-h-screen ">
+            {chainString != 5 ? (
+                <h1 className="py-4 px-4 font-bold text-3xl m-14 min-h-full font-mono text-white">
+                    "Please connect to the Göerli testnet"
+                </h1>
+            ) : (
+                ""
+            )}
+
+            <div className="my-5  flex ">
                 {isWeb3Enabled ? (
                     chainString == 5 ? (
-                        <div className=" container w-100 mx-12">
+                        <div className=" container w-100 mx-12  ">
                             <div>
                                 {dexDisplayed ? (
                                     <div>
                                         <ul class="flex">
                                             <li class="mr-3 py-1">
                                                 <a
-                                                    class="inline-block border border-blue-500 rounded py-1 px-3 bg-blue-500 text-white"
+                                                    class="inline-block border border-fuchsia-700 rounded py-1 px-3 bg-fuchsia-700 text-white"
                                                     href="#"
                                                 >
                                                     Eth to Tokens
@@ -438,7 +443,7 @@ export default function Home() {
                                             <li class="mr-3 py-1">
                                                 <button
                                                     onClick={handleTokenToEthClick}
-                                                    class="inline-block border border-white rounded bg-white hover:border-gray-200 text-blue-500 hover:bg-gray-200 py-1 px-3"
+                                                    class="inline-block border border-white rounded bg-white hover:border-gray-200 text-fuchsia-700 hover:bg-gray-200 py-1 px-3"
                                                     href="#"
                                                 >
                                                     Tokens to Eth
@@ -458,7 +463,7 @@ export default function Home() {
                                             <li class="mr-3 py-1">
                                                 <button
                                                     onClick={handleEthToTokenClick}
-                                                    class="inline-block border border-white bg-white rounded hover:border-gray-200 text-blue-500 hover:bg-gray-200 py-1 px-3"
+                                                    class="inline-block border border-white bg-white rounded hover:border-gray-200 text-fuchsia-700 hover:bg-gray-200 py-1 px-3"
                                                     href="#"
                                                 >
                                                     Eth to Tokens
@@ -466,7 +471,7 @@ export default function Home() {
                                             </li>
                                             <li class="mr-3 py-1">
                                                 <a
-                                                    class="inline-block border border-blue-500 rounded py-1 px-3 bg-blue-500 text-white"
+                                                    class="inline-block border border-fuchsia-700 rounded py-1 px-3 bg-fuchsia-700 text-white"
                                                     href="#"
                                                 >
                                                     Tokens to Eth
@@ -491,7 +496,7 @@ export default function Home() {
                         <div className="py-4 px-4 font-mono"> Thank you for your patience </div>
                     )
                 ) : (
-                    <div class="font-mono">
+                    <div class="font-mono text-xl text-white m-16">
                         {" "}
                         Web3 currently not enabled, please connect your wallet
                     </div>
@@ -505,7 +510,7 @@ export default function Home() {
                                         <ul class="flex">
                                             <li class="mr-3 py-1">
                                                 <a
-                                                    class="inline-block border border-blue-500 rounded py-1 px-3 bg-blue-500 text-white"
+                                                    class="inline-block border border-fuchsia-700 rounded py-1 px-3 bg-fuchsia-700 text-white"
                                                     href="#"
                                                 >
                                                     Bar chart
@@ -514,7 +519,7 @@ export default function Home() {
                                             <li class="mr-3 py-1">
                                                 <button
                                                     onClick={handleGraphClick}
-                                                    class="inline-block border border-white rounded bg-white  hover:border-gray-200 text-blue-500 hover:bg-gray-200 py-1 px-3"
+                                                    class="inline-block border border-white rounded bg-white  hover:border-gray-200 text-fuchsia-700 hover:bg-gray-200 py-1 px-3"
                                                     href="#"
                                                 >
                                                     Graph
@@ -549,7 +554,7 @@ export default function Home() {
                                             <li class="mr-3 py-1">
                                                 <button
                                                     onClick={handleBarClick}
-                                                    class="inline-block border border-white rounded bg-white hover:border-gray-200 text-blue-500 hover:bg-gray-200 py-1 px-3"
+                                                    class="inline-block border border-white rounded bg-white hover:border-gray-200 text-fuchsia-700 hover:bg-gray-200 py-1 px-3"
                                                     href="#"
                                                 >
                                                     Bar chart
@@ -557,7 +562,7 @@ export default function Home() {
                                             </li>
                                             <li class="mr-3 py-1">
                                                 <a
-                                                    class="inline-block border border-blue-500 rounded py-1 px-3 bg-blue-500 text-white"
+                                                    class="inline-block border border-fuchsia-700 rounded py-1 px-3 bg-fuchsia-700 text-white"
                                                     href="#"
                                                 >
                                                     Graph

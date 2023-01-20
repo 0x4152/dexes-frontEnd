@@ -4,20 +4,23 @@
 import { ConnectButton } from "web3uikit"
 import Link from "next/link"
 import Image from "next/image"
-import chainImage from "../img/chains.png"
+import sphereImage from "../img/sphere.png"
 
 export default function Header() {
     return (
         <nav className="p-5 border-b-2 flex flex-row justify-between items-center">
-            <div className="">
+            <div className="flex justify-center items-center">
                 <Image
-                    src={chainImage}
+                    src={sphereImage}
                     className="py-4 px-4 font-bold text-3xl "
                     height="90"
                     width="90"
                 />
-                <a className=" py-4 px-4 font-bold text-3xl ">DEXES</a>
+                <a className=" py-4 px-4 text-white font-bold   justify-left font-mono text-3xl ">
+                    D E X
+                </a>
             </div>
+
             <div className="flex flex-row items-center">
                 <Link href="/">
                     <a className="mr-4 p-6 font-bold"> </a>
