@@ -20,7 +20,8 @@ import Reserves from "../components/reserves"
 import Explanation from "../components/expl"
 import { letterSpacing } from "@mui/system"
 import tokenControlAbi from "../constants/tokenControlAbi.json"
-
+import Indexer from "../components/indexer"
+import { Alert } from "@mui/material"
 export default function Home() {
     const dispatch = useNotification()
     const { isWeb3Enabled, chainId, account } = useMoralis()
@@ -36,8 +37,10 @@ export default function Home() {
     const [lastTxIndex, setLastTxIndex] = useState(0)
     const [inputIndex, setInputIndex] = useState(0)
     const [txInfo, setTxInfo] = useState({ txIndex: 0, numConfirmations: 0, executed: false })
-
+    const [showTxIndexError, setShowTxIndexError] = useState(false)
     const [isOwner, setIsOwner] = useState(false)
+    const [showStepByStep, setShowStepByStep] = useState(false)
+    const [startingIndexForBlock, setStartingIndexForBlock] = useState(0)
     //calculations
 
     //useEffect
@@ -53,27 +56,51 @@ export default function Home() {
 
         setTxCount(_txCount)
         let _lastTxIndex = await getLastTxIndex()
-        setLastTxIndex(_lastTxIndex)
-        let transactionInfo = await getTransaction()
-        setTxInfo({
-            txIndex: inputIndex ? inputIndex : Number(lastTxIndex),
-            numConfirmations: Number(transactionInfo[4]),
-            executed: transactionInfo[3],
-        })
-    }
+        setLastTxIndex(Number(_lastTxIndex))
+        if (_txCount > 8) {
+            setStartingIndexForBlock(Number(_lastTxIndex) - 9)
+        } else {
+            setStartingIndexForBlock(Number(_lastTxIndex) - txCount + 1)
+        }
 
+        if (lastTxIndex >= inputIndex) {
+            setShowTxIndexError(false)
+            let transactionInfo = await getTransaction()
+            setTxInfo({
+                txIndex: inputIndex ? inputIndex : Number(lastTxIndex),
+                numConfirmations: Number(transactionInfo[4]),
+                executed: transactionInfo[3],
+            })
+        } else {
+            setShowTxIndexError(true)
+        }
+    }
+    function handleTxChange(e) {
+        if (/^\d+\.*(\d+)*$/.test(e.target.value)) {
+            setInputIndex(e.target.value)
+        } else if (e.target.value == "") {
+            setInputIndex(0)
+        }
+    }
     useEffect(() => {}, [])
 
     useEffect(() => {
         if (isWeb3Enabled) {
             updateUI()
         }
-    }, [isWeb3Enabled])
+        console.log(lastTxIndex)
+    }, [isWeb3Enabled, inputIndex, lastTxIndex])
 
     ///////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////
-    //Handle card clicks
+    //Handle clicks
+    const handleShowStepClick = () => {
+        setShowStepByStep(true)
+    }
+    const handleHideStepClick = () => {
+        setShowStepByStep(false)
+    }
 
     const handleMintErc20Click = () => {
         mint1YEAH()
@@ -181,9 +208,10 @@ export default function Home() {
         contractAddress: tokenControlAddress,
         functionName: "getTransaction",
         params: {
-            _txIndex: inputIndex ? inputIndex : lastTxIndex,
+            _txIndex: inputIndex <= lastTxIndex ? inputIndex : lastTxIndex,
         },
     })
+
     const { runContractFunction: getLastTxIndex } = useWeb3Contract({
         abi: tokenControlAbi,
         contractAddress: tokenControlAddress,
@@ -216,7 +244,7 @@ export default function Home() {
         contractAddress: tokenControlAddress,
         functionName: "confirmTransaction",
         params: {
-            _txIndex: 0,
+            _txIndex: inputIndex,
         },
     })
     const { runContractFunction: executeTransaction } = useWeb3Contract({
@@ -224,150 +252,310 @@ export default function Home() {
         contractAddress: tokenControlAddress,
         functionName: "executeTransaction",
         params: {
-            _txIndex: 0,
+            _txIndex: inputIndex,
         },
     })
     const { runContractFunction: revokeTransaction } = useWeb3Contract({
         abi: tokenControlAbi,
         contractAddress: tokenControlAddress,
-        functionName: "executeTransaction",
+        functionName: "revokeTransaction",
         params: {
-            _txIndex: 0,
+            _txIndex: inputIndex,
         },
     })
     const { runContractFunction: erc20Mint } = useWeb3Contract({
         abi: tokenControlAbi,
         contractAddress: tokenControlAddress,
-        functionName: "executeTransaction",
+        functionName: "erc20Mint",
         params: {
             erc20ContractAddress: YeahTokenAddress,
             tokenAmountToMint: "100000000000000000",
         },
     })
     return (
-        <div className="container mx-1 min-h-screen">
+        <div className=" min-h-screen my-5">
             {" "}
             {isWeb3Enabled ? (
                 chainString == 5 ? (
-                    <div>
-                        <div className="w-full max-w-xl min-h-4xl hover:bg-slate-300">
-                            <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                                <div>
-                                    {" "}
-                                    <label
-                                        className="block text-gray-700 text-sm font-bold mb-2"
-                                        for="username"
-                                    >
-                                        Yeah Token Multi-Sig
-                                    </label>
-                                    <p>
-                                        This Dapp interacts with a smart contract that controls the
-                                        minting of YEAH tokens.{" "}
-                                    </p>
-                                    <p>
-                                        To be able to interact with this multi-sig you will have to
-                                        become an owner. Click on the "become owner" button to be
-                                        able to interact with the multi-sig{" "}
-                                    </p>
-                                    <p>
-                                        Once you are an owner you will be able to queue
-                                        transactions, confirm and revoke your confirmation, and
-                                        lastly execute those transactions.
-                                    </p>
-                                    <p>
-                                        To execute a transaction the transaction needs 2
-                                        confirmations from the owners. You can check the number of
-                                        transactions on the transaction info.
-                                    </p>
-                                    <p></p>
-                                </div>
-                            </form>
-                            <p className="text-center text-gray-500 text-xs"></p>
-                        </div>{" "}
-                        <div className="w-full max-w-xl min-h-4xl hover:bg-slate-300">
-                            <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                                <div>
-                                    {" "}
-                                    <label
-                                        className="block text-gray-700 text-sm font-bold mb-2"
-                                        for="username"
-                                    >
-                                        Step by Step
-                                    </label>
-                                    <p>
-                                        1. Click add my account to owners. Wait for the transaction
-                                        to be included in a block.
-                                    </p>
-                                    <p>
-                                        2. Click mint 1 YEAH. This will queue a transaction, it will
-                                        then be possible to confirm the transaction.
-                                    </p>
-                                    <p>
-                                        3. Click "Confirm the transaction" inputing the transaction
-                                        index you just created.
-                                    </p>
-                                    <p>
-                                        4. The transaction will need two confirmations to be
-                                        executable. For testing purposes repeat step 1 and step 3,
-                                        inputing the same tx
-                                    </p>{" "}
-                                    <p>
-                                        5. Once the transaction has two confirmations, it can be
-                                        executed, minting 1 Yeah token to the account that called
-                                        the mint function.
-                                    </p>
-                                    <p></p>
-                                </div>
-                            </form>
-                            <p className="text-center text-gray-500 text-xs"></p>
-                        </div>{" "}
-                        <div className="w-full max-w-xl min-h-4xl hover:bg-slate-300">
-                            <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                                <div>
-                                    {isOwner ? (
-                                        <button
-                                            onClick={() => console.log("already an owner")}
-                                            class="bg-violet-400 hover:bg-violet-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                            type="button"
+                    <div className="flex min-h-screen justify-between ">
+                        <div>
+                            <div className="w-full max-w-xl min-h-4xl min-w-xl  m-5">
+                                <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 ">
+                                    <div>
+                                        {" "}
+                                        <label
+                                            className="block text-gray-700 text-xl font-bold mb-2"
+                                            for="username"
                                         >
-                                            You are already an Owner!
-                                        </button>
-                                    ) : (
-                                        <button
-                                            onClick={handleAddOwnerClick}
-                                            class="bg-violet-400 hover:bg-violet-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                            type="button"
-                                        >
-                                            Become a Multi-Sig owner
-                                        </button>
-                                    )}
-                                </div>
-                            </form>
-                            <p className="text-center text-gray-500 text-xs"></p>
-                        </div>
-                        <div className="w-full max-w-xl min-h-4xl hover:bg-slate-300">
-                            <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                                <div>
-                                    <p className="text-center text-gray-500 text-xs">
-                                        Transaction {txInfo.txIndex}
-                                    </p>
-                                    <p className="text-center text-gray-500 text-xs">
-                                        Confirmations on this transaction: {txInfo.numConfirmations}
-                                    </p>
-                                    <p className="text-center text-gray-500 text-xs">
-                                        {txInfo.executed ? (
-                                            <div>
-                                                Transaction {txInfo.txIndex} has been executed
-                                            </div>
+                                            Yeah Token Multi-Sig
+                                        </label>
+                                        <p className="my-2">
+                                            This Dapp interacts with a smart contract that controls
+                                            the minting of YEAH tokens.{" "}
+                                        </p>
+                                        <p className="my-2">
+                                            To be able to interact with this multi-sig you will have
+                                            to become an owner. Click on the "become owner" button
+                                            to be able to interact with the multi-sig{" "}
+                                        </p>
+                                        <p className="my-2">
+                                            Once you are an owner you will be able to queue
+                                            transactions, confirm and revoke your confirmation, and
+                                            lastly execute those transactions.
+                                        </p>
+                                        <p className="my-2">
+                                            To execute a transaction the transaction needs 2
+                                            confirmations from the owners. You can check the number
+                                            of transactions on the transaction info.
+                                        </p>
+                                        <p></p>
+                                        {showStepByStep ? (
+                                            <button
+                                                onClick={handleHideStepClick}
+                                                class="bg-violet-400 my-4 hover:bg-violet-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                type="button"
+                                            >
+                                                Hide step by step
+                                            </button>
                                         ) : (
-                                            <div>
-                                                Transaction {txInfo.txIndex} has not been executed
-                                            </div>
+                                            <button
+                                                onClick={handleShowStepClick}
+                                                class="bg-violet-400 my-4 hover:bg-violet-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                type="button"
+                                            >
+                                                Show step by step instructions
+                                            </button>
                                         )}
-                                    </p>
+                                    </div>
+                                </form>
+                                <p className="text-center text-gray-500 text-xs"></p>
+                            </div>{" "}
+                            {showStepByStep ? (
+                                <div className="w-full max-w-xl  min-h-4xl m-5">
+                                    <form className="bg-white shadow-md  rounded px-8 pt-6 pb-8 mb-4">
+                                        <div>
+                                            {" "}
+                                            <label
+                                                className="block text-gray-700 text-sm font-bold mb-2"
+                                                for="username"
+                                            >
+                                                Step by Step
+                                            </label>
+                                            <p>
+                                                1. Click add my account to owners. Wait for the
+                                                transaction to be included in a block.
+                                            </p>
+                                            <p>
+                                                2. Click mint 1 YEAH. This will queue a transaction,
+                                                it will then be possible to confirm the transaction.
+                                            </p>
+                                            <p>
+                                                3. Click "Confirm the transaction" inputing the
+                                                transaction index you just created.
+                                            </p>
+                                            <p>
+                                                4. The transaction will need two confirmations to be
+                                                executable. For testing purposes repeat step 1 and
+                                                step 3, inputing the same tx
+                                            </p>{" "}
+                                            <p>
+                                                5. Once the transaction has two confirmations, it
+                                                can be executed, minting 1 Yeah token to the account
+                                                that called the mint function.
+                                            </p>
+                                            <p></p>
+                                        </div>
+                                    </form>
+                                    <p className="text-center text-gray-500 text-xs"></p>
                                 </div>
-                            </form>
-                            <p className="text-center text-gray-500 text-xs"></p>
+                            ) : (
+                                <></>
+                            )}
+                        </div>
+                        <div className="w-fit flex-wrap m-4">
+                            {" "}
+                            <div className="w-full justify-center">
+                                <Indexer
+                                    startingIndexForBlock={startingIndexForBlock}
+                                    txCount={txCount}
+                                    lastTxIndex={lastTxIndex}
+                                    inputIndex={inputIndex}
+                                    setInputIndex={setInputIndex}
+                                />
+                            </div>
+                            <div className="">
+                                <form className="bg-white shadow-md rounded  px-8 pt-6 pb-8 mb-4 flex min-h-full ">
+                                    <div className="min-h-full  w-30"> </div>
+                                    <div className="flex justify-center">
+                                        <div className="flex-wrap   w-120 rounded-xl">
+                                            {showTxIndexError ? (
+                                                <Alert severity="warning">
+                                                    <strong>
+                                                        Transaction {inputIndex} doesn't exist.{" "}
+                                                    </strong>
+                                                    There are only transactions uptil index{" "}
+                                                    {lastTxIndex}
+                                                </Alert>
+                                            ) : (
+                                                <></>
+                                            )}
+                                            <div className="h-fit flex items-center justify-center ">
+                                                <div>
+                                                    <p className="text-center text-gray-900 text-XL m-2">
+                                                        Transaction {txInfo.txIndex}
+                                                    </p>
+                                                    <p className="text-center text-gray-900 text-XL m-2">
+                                                        Confirmations on this transaction:{" "}
+                                                        {txInfo.numConfirmations}
+                                                    </p>
+                                                    <p className="text-center text-gray-900 text-XL m-2">
+                                                        {txInfo.executed ? (
+                                                            <div>
+                                                                Transaction {txInfo.txIndex} has
+                                                                been executed
+                                                            </div>
+                                                        ) : (
+                                                            <div>
+                                                                <div>
+                                                                    Transaction {txInfo.txIndex} has
+                                                                    not been executed
+                                                                </div>
+                                                            </div>
+                                                        )}{" "}
+                                                        {txInfo.executed ? (
+                                                            <div className="my-4 flex">
+                                                                <button
+                                                                    onClick={() =>
+                                                                        console.log(
+                                                                            "Transaction executed"
+                                                                        )
+                                                                    }
+                                                                    class="bg-rose-400 mx-2 hover:bg-rose-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                                    type="button"
+                                                                >
+                                                                    Confirm transaction
+                                                                </button>
+                                                                <button
+                                                                    onClick={() =>
+                                                                        console.log(
+                                                                            "Transaction executed"
+                                                                        )
+                                                                    }
+                                                                    class="bg-rose-400 mx-2 hover:bg-rose-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                                    type="button"
+                                                                >
+                                                                    Revoke confirmation
+                                                                </button>
+                                                                <button
+                                                                    onClick={() =>
+                                                                        console.log(
+                                                                            "Transaction executed"
+                                                                        )
+                                                                    }
+                                                                    class="bg-rose-400 mx-2 hover:bg-rose-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                                    type="button"
+                                                                >
+                                                                    Execute transaction
+                                                                </button>
+                                                            </div>
+                                                        ) : (
+                                                            <div>
+                                                                <div className="my-4 flex">
+                                                                    <button
+                                                                        onClick={handleConfirmClick}
+                                                                        class="bg-pink-400 mx-2 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                                        type="button"
+                                                                    >
+                                                                        Confirm transaction
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={handleRevokeClick}
+                                                                        class="bg-red-600 mx-2 hover:bg-red-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                                        type="button"
+                                                                    >
+                                                                        Revoke confirmation
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={handleExecuteClick}
+                                                                        class="bg-indigo-400 mx-2 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                                        type="button"
+                                                                    >
+                                                                        Execute transaction
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <p className="text-center text-gray-500 text-xs"></p>
+                            </div>
+                            <div className="container my-12 w-full max-w-xl min-h-4xl hover:bg-slate-300">
+                                <form className="bg-white shadow-md rounded h-full px-8 pt-6 pb-8 mb-4">
+                                    <div>
+                                        <div className="my-2">
+                                            {isOwner ? (
+                                                <button
+                                                    onClick={() => console.log("already an owner")}
+                                                    class="bg-violet-400 hover:bg-violet-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                    type="button"
+                                                >
+                                                    You are already an Owner!
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    onClick={handleAddOwnerClick}
+                                                    class="bg-violet-400 hover:bg-violet-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                    type="button"
+                                                >
+                                                    Become a Multi-Sig owner
+                                                </button>
+                                            )}
+                                        </div>
+                                        <div className="my-2">
+                                            {isOwner ? (
+                                                <button
+                                                    onClick={handleMintErc20Click}
+                                                    class="bg-violet-400 hover:bg-violet-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                    type="button"
+                                                >
+                                                    Mint 1 YEAH to your account
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    onClick={() => console.log("not an owner")}
+                                                    class="bg-red-400 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                    type="button"
+                                                >
+                                                    Mint 1 YEAH to your account
+                                                </button>
+                                            )}
+                                            <p>
+                                                {" "}
+                                                This will create transaction with index{" "}
+                                                {lastTxIndex + 1}{" "}
+                                            </p>
+                                        </div>
+                                        <div className="my-2">
+                                            <p className="text-left text-bold text-gray-500 text-m">
+                                                Check a transaction
+                                            </p>
+                                            <input
+                                                onChange={handleTxChange}
+                                                value={inputIndex}
+                                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                id="username"
+                                                type="number"
+                                                placeholder="Transaction index"
+                                            />
+                                        </div>
+                                    </div>
+                                </form>
+                                <p className="text-center text-gray-500 text-xs"></p>
+                            </div>
                         </div>
                     </div>
                 ) : (
