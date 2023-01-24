@@ -67,7 +67,7 @@ export default function Home() {
             setShowTxIndexError(false)
             let transactionInfo = await getTransaction()
             setTxInfo({
-                txIndex: inputIndex ? inputIndex : Number(lastTxIndex),
+                txIndex: inputIndex,
                 numConfirmations: Number(transactionInfo[4]),
                 executed: transactionInfo[3],
             })
@@ -258,7 +258,7 @@ export default function Home() {
     const { runContractFunction: revokeTransaction } = useWeb3Contract({
         abi: tokenControlAbi,
         contractAddress: tokenControlAddress,
-        functionName: "revokeTransaction",
+        functionName: "revokeConfirmation",
         params: {
             _txIndex: inputIndex,
         },
@@ -503,7 +503,7 @@ export default function Home() {
                                                     class="bg-violet-400 hover:bg-violet-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                                     type="button"
                                                 >
-                                                    You are already an Owner!
+                                                    You are already a Owner!
                                                 </button>
                                             ) : (
                                                 <button
@@ -522,7 +522,7 @@ export default function Home() {
                                                     class="bg-violet-400 hover:bg-violet-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                                     type="button"
                                                 >
-                                                    Mint 1 YEAH to your account
+                                                    Mint 0.1 YEAH to your account
                                                 </button>
                                             ) : (
                                                 <button
@@ -530,7 +530,7 @@ export default function Home() {
                                                     class="bg-red-400 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                                     type="button"
                                                 >
-                                                    Mint 1 YEAH to your account
+                                                    Mint 0.1 YEAH to your account
                                                 </button>
                                             )}
                                             <p>

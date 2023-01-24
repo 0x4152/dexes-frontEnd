@@ -43,7 +43,7 @@ export default function Indexer({
                                 onClick={() => setInputIndex(button)}
                                 class={
                                     inputIndex == button
-                                        ? "bg-violet-600 mx-2 hover:bg-violet-800 my-2 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline"
+                                        ? "bg-violet-600 mx-2 hover:bg-violet-800 my-2 text-white font-bold py-3 px-3 rounded focus:outline-none focus:shadow-outline"
                                         : "bg-fuchsia-400 mx-2 hover:bg-fuchsia-600 my-2 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline"
                                 }
                                 type="button"

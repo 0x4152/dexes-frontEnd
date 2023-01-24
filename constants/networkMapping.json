@@ -1,44 +1,44 @@
 {
     "1": {
         "DexV1": [
-            "0x3a2636641e5B05C4e57A7a475A100188C2f0c15e"
+            "0x509aA98ca579aDec742380a782aCd299262FD3dC"
         ],
         "YeahToken": [
-            "0xD02f877E7c9748B69729ACf39949C12A8D529B5c"
+            "0x59F1111d8e8ED6C62e50dA42F14b1023F2733b34"
         ],
         "LPToken": [
-            "0x8e502b0A0480D6Dc43C70795E665f9A4C4bf2131"
+            "0xA2353E6423381749AA17f1bd6346172CD00B11E3"
         ],
         "TokenControl": [
-            "0x0428BE3C63277a1244fc1E610E9F2D9D5Cf089Fd"
+            "0x49cc4ff3171cC9DBAeBE9AAAb06719666AeFb722"
         ]
     },
     "5": {
         "DexV1": [
-            "0x3a2636641e5B05C4e57A7a475A100188C2f0c15e"
+            "0x509aA98ca579aDec742380a782aCd299262FD3dC"
         ],
         "YeahToken": [
-            "0xD02f877E7c9748B69729ACf39949C12A8D529B5c"
+            "0x59F1111d8e8ED6C62e50dA42F14b1023F2733b34"
         ],
         "LPToken": [
-            "0x8e502b0A0480D6Dc43C70795E665f9A4C4bf2131"
+            "0xA2353E6423381749AA17f1bd6346172CD00B11E3"
         ],
         "TokenControl": [
-            "0x0428BE3C63277a1244fc1E610E9F2D9D5Cf089Fd"
+            "0x49cc4ff3171cC9DBAeBE9AAAb06719666AeFb722"
         ]
     },
     "1337": {
         "DexV1": [
-            "0x3a2636641e5B05C4e57A7a475A100188C2f0c15e"
+            "0x509aA98ca579aDec742380a782aCd299262FD3dC"
         ],
         "YeahToken": [
-            "0xD02f877E7c9748B69729ACf39949C12A8D529B5c"
+            "0x59F1111d8e8ED6C62e50dA42F14b1023F2733b34"
         ],
         "LPToken": [
-            "0x8e502b0A0480D6Dc43C70795E665f9A4C4bf2131"
+            "0xA2353E6423381749AA17f1bd6346172CD00B11E3"
         ],
         "TokenControl": [
-            "0x0428BE3C63277a1244fc1E610E9F2D9D5Cf089Fd"
+            "0x49cc4ff3171cC9DBAeBE9AAAb06719666AeFb722"
         ]
     }
 }
