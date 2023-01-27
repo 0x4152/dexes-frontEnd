@@ -127,6 +127,25 @@
         "inputs": [
             {
                 "internalType": "address",
+                "name": "erc20ContractAddress",
+                "type": "address"
+            }
+        ],
+        "name": "Mint1",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "txIndex",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
                 "name": "newOwner",
                 "type": "address"
             }
@@ -147,6 +166,19 @@
         "name": "confirmTransaction",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "creator",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -246,6 +278,11 @@
                 "internalType": "uint256",
                 "name": "numConfirmations",
                 "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "toMint",
+                "type": "address"
             }
         ],
         "stateMutability": "view",
@@ -395,6 +432,11 @@
             {
                 "internalType": "address",
                 "name": "to",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "toMint",
                 "type": "address"
             },
             {

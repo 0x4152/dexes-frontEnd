@@ -31,7 +31,7 @@ export default function Reserves({
 }) {
     const { isWeb3Enabled, chainId, account } = useMoralis()
     const [data, setData] = useState({
-        labels: ["ETH reserves", "YEAH reserves"],
+        labels: ["ETH reserves", "DEX reserves"],
         datasets: [{ label: "Tokens", data: [ethReserves, tokenReserves] }],
         backgroundColor: ["red"],
     })
@@ -67,9 +67,9 @@ export default function Reserves({
                     "Current ETH reserves",
                     "ETH reserves after trade",
                     "ETH exchanged",
-                    "Current YEAH reserves",
-                    "YEAH reserves after trade",
-                    "YEAH tokens returned",
+                    "Current DEX reserves",
+                    "DEX reserves after trade",
+                    "DEX tokens returned",
                 ],
                 datasets: [
                     {
@@ -101,9 +101,9 @@ export default function Reserves({
                     "Current ETH reserves",
                     "ETH reserves after trade",
                     "ETH returned",
-                    "Current YEAH reserves",
-                    "YEAH reserves after trade",
-                    "YEAH Tokens exchanged",
+                    "Current DEX reserves",
+                    "DEX reserves after trade",
+                    "DEX Tokens exchanged",
                 ],
                 datasets: [
                     {
@@ -131,7 +131,7 @@ export default function Reserves({
     }, [tokenAmount, expectedEthAmount, expectedTokenAmount])
     useEffect(() => {
         setData({
-            labels: ["ETH reserves", "YEAH reserves"],
+            labels: ["ETH reserves", "DEX reserves"],
             datasets: [
                 {
                     label: ["Tokens"],
@@ -150,11 +150,11 @@ export default function Reserves({
                             className="block text-gray-700 text-xl font-bold mb-2"
                             for="username"
                         >
-                            ETH / YEAH liquidity pool
+                            ETH / DEX liquidity pool
                         </label>{" "}
                         <div className="m-2 font-bold text-gray-400">
                             Current Reserves: {parseFloat(Number(ethReserves).toFixed(5))} ETH /
-                            {" " + parseFloat(Number(tokenReserves).toFixed(5))} YEAH
+                            {" " + parseFloat(Number(tokenReserves).toFixed(5))} DEX
                         </div>
                     </div>
                     <div className="mb-4 p-2 px-4">
@@ -199,17 +199,17 @@ export default function Reserves({
                             {tokensApproved ? (
                                 tokensApproved >= tokensToApprove ? (
                                     <Alert severity="success">
-                                        You <strong>{tokensApproved} YEAH </strong>approved, enough
+                                        You <strong>{tokensApproved} DEX </strong>approved, enough
                                         for the ETH quantity you want to deposit
                                     </Alert>
                                 ) : (
                                     <div>
                                         <Alert severity="warning">
-                                            You have {tokensApproved} YEAH approved, not enough for
+                                            You have {tokensApproved} DEX approved, not enough for
                                             the ETH quantity you want to deposit, you will need to
                                             approve
                                             <strong> {tokensToApprove} </strong>
-                                            YEAH tokens to deposit
+                                            DEX tokens to deposit
                                             <strong>{depositEthAmount} </strong>
                                             ETH
                                         </Alert>
@@ -223,7 +223,7 @@ export default function Reserves({
                                                 Click on the approve button to approve this contract
                                                 to manipulate
                                                 <strong>{tokensToApprove}</strong>
-                                                YEAH tokens from your account.
+                                                DEX tokens from your account.
                                             </p>
                                         </Alert>
                                     </div>
@@ -241,7 +241,7 @@ export default function Reserves({
 
                                     <p className="m-4">
                                         Click on the approve button to approve this contract to
-                                        manipulate <strong>{tokensToApprove} YEAH tokens </strong>
+                                        manipulate <strong>{tokensToApprove} DEX tokens </strong>
                                         from your account.
                                     </p>
                                 </Alert>

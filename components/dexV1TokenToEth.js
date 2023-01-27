@@ -37,12 +37,12 @@ export default function DexV1TokenToEth({
                         {tokensApproved ? (
                             tokensApproved >= tokensToApproveExchange ? (
                                 <Alert severity="success">
-                                    You have <strong>{tokensApproved} YEAH </strong>approved
+                                    You have <strong>{tokensApproved} DEX </strong>approved
                                 </Alert>
                             ) : (
                                 <div>
                                     <Alert severity="warning">
-                                        You have <strong>{" " + tokensApproved + " "} YEAH </strong>
+                                        You have <strong>{" " + tokensApproved + " "} DEX </strong>
                                         approved, not enough for the quantity you want to exchange.
                                     </Alert>
                                     <Alert severity="info">
@@ -50,7 +50,7 @@ export default function DexV1TokenToEth({
                                             Click on the approve button to approve this contract to
                                             manipulate
                                             <strong>
-                                                {" " + tokensToApproveExchange + " "}YEAH{" "}
+                                                {" " + tokensToApproveExchange + " "}DEX{" "}
                                             </strong>
                                             tokens from your account.
                                         </p>
@@ -62,7 +62,7 @@ export default function DexV1TokenToEth({
                                 <p className="m-4">
                                     Click on the approve button to approve this contract to
                                     manipulate{" "}
-                                    <strong>{tokensToApproveExchange} YEAH tokens </strong>
+                                    <strong>{tokensToApproveExchange} DEX tokens </strong>
                                     from your account.
                                 </p>
                             </Alert>

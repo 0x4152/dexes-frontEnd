@@ -66,7 +66,7 @@ export default function Graph({
             },
             {
                 type: "scatter",
-                label: "possible ETH / YEAH Reserves",
+                label: "possible ETH / DEX Reserves",
                 data: [
                     { x: 7, y: 1 },
                     { x: 8, y: 2 },
@@ -94,8 +94,8 @@ export default function Graph({
             //eth to token
             ethBalance = parseFloat(ethReserves) + parseFloat(tokenAmount)
 
-            let yeahBalance = product / parseFloat(ethBalance)
-            pointData = { x: ethBalance, y: yeahBalance }
+            let DEXBalance = product / parseFloat(ethBalance)
+            pointData = { x: ethBalance, y: DEXBalance }
         } else {
             //token to eth
             let tokenBalance = parseFloat(tokenReserves) + parseFloat(tokenAmount)
@@ -153,17 +153,17 @@ export default function Graph({
             let product = tokenReserves * ethReserves
             let ethBalance = startingPoint
             for (let i = startingPoint; i < range; i++) {
-                let yeahBalance = product / ethBalance
+                let DEXBalance = product / ethBalance
                 results.push({
                     x: ethBalance,
-                    y: yeahBalance,
+                    y: DEXBalance,
                 })
 
                 ethBalance += increments
             }
             setGraphData(results)
         } else {
-            //same calculation than when exchanging eth to tokens, but this time tokenAmount represents the amount of YEAH tokens exchanged.
+            //same calculation than when exchanging eth to tokens, but this time tokenAmount represents the amount of DEX tokens exchanged.
             //The value that we are interested in is the ETH amount that we will recieve, the distance between the two points
             //that represent the initial reserves and the reserves after the trade
             results = []
@@ -213,10 +213,10 @@ export default function Graph({
             let product = tokenReserves * ethReserves
             let ethBalance = startingPoint
             for (let i = startingPoint; i < range; i++) {
-                let yeahBalance = product / ethBalance
+                let DEXBalance = product / ethBalance
                 results.push({
                     x: ethBalance,
-                    y: yeahBalance,
+                    y: DEXBalance,
                 })
 
                 ethBalance += increments
@@ -238,7 +238,7 @@ export default function Graph({
                 },
                 {
                     type: "scatter",
-                    label: "possible ETH / YEAH Reserves",
+                    label: "possible ETH / DEX Reserves",
                     data: results,
                     backgroundColor: ["rgb(188, 191, 188)"],
                 },
@@ -260,11 +260,11 @@ export default function Graph({
                             className="block text-gray-700 text-3xl font-bold m-2"
                             for="username"
                         >
-                            ETH / YEAH Liquidity Pool
+                            ETH / DEX Liquidity Pool
                         </label>{" "}
                         <div className="m-2 font-bold text-gray-400">
                             Current Reserves: {parseFloat(Number(ethReserves).toFixed(5))} ETH/
-                            {parseFloat(Number(tokenReserves).toFixed(5))} YEAH
+                            {parseFloat(Number(tokenReserves).toFixed(5))} DEX
                         </div>
                         {tokenAmount ? (
                             <>
@@ -275,7 +275,7 @@ export default function Graph({
                                             Average Price of Eth bought:{" "}
                                             {parseFloat(Number(expectedTokenAmount).toFixed(5)) /
                                                 parseFloat(Number(tokenAmount).toFixed(5))}{" "}
-                                            ETH / YEAH
+                                            ETH / DEX
                                         </div>
                                     </div>
                                 ) : (
@@ -285,7 +285,7 @@ export default function Graph({
                                             Average Price of Eth bought:{" "}
                                             {parseFloat(Number(expectedEthAmount).toFixed(5)) /
                                                 parseFloat(Number(tokenAmount).toFixed(5))}{" "}
-                                            ETH / YEAH
+                                            ETH / DEX
                                         </div>
                                     </div>
                                 )}
@@ -302,7 +302,7 @@ export default function Graph({
                         <div className="flex content-center justify-center align-middle items-center">
                             <div className="container content-center m-2 justify-center w-14">
                                 <p className="container justtify-center text-center max-h-2 text-gray-500 text-xl m-3">
-                                    YEAH
+                                    DEX
                                 </p>
                             </div>
                             <Scatter data={data} />
@@ -311,7 +311,7 @@ export default function Graph({
                         <p className=" text-gray-500 my-4 mx-3 ">
                             {" "}
                             This graph is a representation of the curve created by the constant
-                            product formula, which describes all the possible ratios of ETH and YEAH
+                            product formula, which describes all the possible ratios of ETH and DEX
                             tokens the liquidity pool could have after an exchange transaction, and
                             therefore it gives us an idea of how prices change depending on the
                             amount of assets the pool holds compared to the amount of assets we are
@@ -332,7 +332,7 @@ export default function Graph({
                                                     5
                                                 )
                                             )}
-                                            , that represents the YEAH token reserve after the
+                                            , that represents the DEX token reserve after the
                                             transaction.
                                         </p>
                                         <p className=" text-gray-500  m-3">
@@ -348,7 +348,7 @@ export default function Graph({
                                         <Alert severity="success">
                                             <p className="">
                                                 Excellent! Now you should see a preview of trade
-                                                consisting of {tokenAmount} ETH to YEAH{" "}
+                                                consisting of {tokenAmount} ETH to DEX{" "}
                                             </p>
                                         </Alert>
                                     </p>
@@ -370,7 +370,7 @@ export default function Graph({
                                     <p className=" text-gray-500  m-3">
                                         <p className=" text-gray-500  m-3">
                                             {" "}
-                                            We can see that by adding {tokenAmount} YEAH to the pool
+                                            We can see that by adding {tokenAmount} DEX to the pool
                                             we would be moving the ratio by {tokenAmount} on the Y
                                             axis, and by doing so, to mantain the constant K in the
                                             constant product formula we would arrive to the X value:{" "}
@@ -393,14 +393,14 @@ export default function Graph({
                                         <Alert severity="success">
                                             <p className="">
                                                 Excellent! Now you should see a preview of trade
-                                                consisting of {tokenAmount} YEAH to ETH{" "}
+                                                consisting of {tokenAmount} DEX to ETH{" "}
                                             </p>
                                         </Alert>
                                     </p>
                                 ) : (
                                     <Alert severity="info">
                                         <p className="m-4">
-                                            Try putting a YEAH amount on the Tokens to ETH box!
+                                            Try putting a DEX amount on the Tokens to ETH box!
                                         </p>
                                         <p className="m-4">
                                             This will draw a graph that previews the exchange for

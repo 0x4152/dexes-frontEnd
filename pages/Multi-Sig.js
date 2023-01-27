@@ -31,6 +31,9 @@ export default function Home() {
     const YeahTokenAddress = networkMapping[chainString]["YeahToken"][0]
     const LPTokenAddress = networkMapping[chainString]["LPToken"][0]
     const tokenControlAddress = networkMapping[chainString]["TokenControl"][0]
+    const tokenAddressString = YeahTokenAddress.toString()
+    const url = "https://goerli.etherscan.io/address/" + tokenAddressString + ""
+    console.log(url)
     //stateVariables
     const [owners, setOwners] = useState(0)
     const [txCount, setTxCount] = useState(0)
@@ -45,13 +48,21 @@ export default function Home() {
 
     //useEffect
     async function updateUI() {
+        //Check if user is owner
         let _owners = await getOwners()
+        let x = false
         for (let i = 0; i < _owners.length; i++) {
-            if (account.toString == _owners[0].toString) {
-                setIsOwner(true)
+            if (Number(account) == Number(_owners[i])) {
+                x = true
             }
         }
+        if (x) {
+            setIsOwner(true)
+        } else {
+            setIsOwner(false)
+        }
         setOwners(_owners)
+        //Tx count for array
         let _txCount = await getTransactionCount()
 
         setTxCount(_txCount)
@@ -62,14 +73,16 @@ export default function Home() {
         } else {
             setStartingIndexForBlock(Number(_lastTxIndex) - txCount + 1)
         }
-
+        //get transaction info
         if (lastTxIndex >= inputIndex) {
             setShowTxIndexError(false)
             let transactionInfo = await getTransaction()
+
             setTxInfo({
                 txIndex: inputIndex,
                 numConfirmations: Number(transactionInfo[4]),
                 executed: transactionInfo[3],
+                to: transactionInfo[5],
             })
         } else {
             setShowTxIndexError(true)
@@ -88,8 +101,7 @@ export default function Home() {
         if (isWeb3Enabled) {
             updateUI()
         }
-        console.log(lastTxIndex)
-    }, [isWeb3Enabled, inputIndex, lastTxIndex])
+    }, [isWeb3Enabled, inputIndex, lastTxIndex, isOwner])
 
     ///////////////////////////////////////////////////////////
 
@@ -266,10 +278,9 @@ export default function Home() {
     const { runContractFunction: erc20Mint } = useWeb3Contract({
         abi: tokenControlAbi,
         contractAddress: tokenControlAddress,
-        functionName: "erc20Mint",
+        functionName: "Mint1",
         params: {
             erc20ContractAddress: YeahTokenAddress,
-            tokenAmountToMint: "100000000000000000",
         },
     })
     return (
@@ -403,6 +414,9 @@ export default function Home() {
                                                 <div>
                                                     <p className="text-center text-gray-900 text-XL m-2">
                                                         Transaction {txInfo.txIndex}
+                                                    </p>{" "}
+                                                    <p className="text-center text-gray-900 text-XL m-2">
+                                                        Dex tokens minted to address: {txInfo.to}
                                                     </p>
                                                     <p className="text-center text-gray-900 text-XL m-2">
                                                         Confirmations on this transaction:{" "}
@@ -422,67 +436,87 @@ export default function Home() {
                                                                 </div>
                                                             </div>
                                                         )}{" "}
-                                                        {txInfo.executed ? (
-                                                            <div className="my-4 flex">
-                                                                <button
-                                                                    onClick={() =>
-                                                                        console.log(
-                                                                            "Transaction executed"
-                                                                        )
-                                                                    }
-                                                                    class="bg-rose-400 mx-2 hover:bg-rose-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                                                    type="button"
-                                                                >
-                                                                    Confirm transaction
-                                                                </button>
-                                                                <button
-                                                                    onClick={() =>
-                                                                        console.log(
-                                                                            "Transaction executed"
-                                                                        )
-                                                                    }
-                                                                    class="bg-rose-400 mx-2 hover:bg-rose-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                                                    type="button"
-                                                                >
-                                                                    Revoke confirmation
-                                                                </button>
-                                                                <button
-                                                                    onClick={() =>
-                                                                        console.log(
-                                                                            "Transaction executed"
-                                                                        )
-                                                                    }
-                                                                    class="bg-rose-400 mx-2 hover:bg-rose-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                                                    type="button"
-                                                                >
-                                                                    Execute transaction
-                                                                </button>
-                                                            </div>
-                                                        ) : (
-                                                            <div>
+                                                        {isOwner ? (
+                                                            txInfo.executed ? (
                                                                 <div className="my-4 flex">
                                                                     <button
-                                                                        onClick={handleConfirmClick}
-                                                                        class="bg-pink-400 mx-2 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                                        onClick={() =>
+                                                                            console.log(
+                                                                                "Transaction executed"
+                                                                            )
+                                                                        }
+                                                                        class="bg-rose-400 mx-2 hover:bg-rose-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                                                         type="button"
                                                                     >
                                                                         Confirm transaction
                                                                     </button>
                                                                     <button
-                                                                        onClick={handleRevokeClick}
-                                                                        class="bg-red-600 mx-2 hover:bg-red-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                                        onClick={() =>
+                                                                            console.log(
+                                                                                "Transaction executed"
+                                                                            )
+                                                                        }
+                                                                        class="bg-rose-400 mx-2 hover:bg-rose-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                                                         type="button"
                                                                     >
                                                                         Revoke confirmation
                                                                     </button>
                                                                     <button
-                                                                        onClick={handleExecuteClick}
-                                                                        class="bg-indigo-400 mx-2 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                                        onClick={() =>
+                                                                            console.log(
+                                                                                "Transaction executed"
+                                                                            )
+                                                                        }
+                                                                        class="bg-rose-400 mx-2 hover:bg-rose-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                                                         type="button"
                                                                     >
                                                                         Execute transaction
                                                                     </button>
                                                                 </div>
+                                                            ) : (
+                                                                <div>
+                                                                    <div className="my-4 flex">
+                                                                        <button
+                                                                            onClick={
+                                                                                handleConfirmClick
+                                                                            }
+                                                                            class="bg-pink-400 mx-2 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                                            type="button"
+                                                                        >
+                                                                            Confirm transaction
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={
+                                                                                handleRevokeClick
+                                                                            }
+                                                                            class="bg-red-600 mx-2 hover:bg-red-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                                            type="button"
+                                                                        >
+                                                                            Revoke confirmation
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={
+                                                                                handleExecuteClick
+                                                                            }
+                                                                            class="bg-indigo-400 mx-2 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                                            type="button"
+                                                                        >
+                                                                            Execute transaction
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            )
+                                                        ) : (
+                                                            <div>
+                                                                <button
+                                                                    onClick={handleAddOwnerClick}
+                                                                    class="bg-violet-400 hover:bg-violet-600 my-2 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                                                    type="button"
+                                                                >
+                                                                    To confirm transactions and
+                                                                    execute them you need to be a
+                                                                    Owner
+                                                                </button>
                                                             </div>
                                                         )}
                                                     </p>
@@ -533,6 +567,11 @@ export default function Home() {
                                                     Mint 0.1 YEAH to your account
                                                 </button>
                                             )}
+                                            <p className="my-2 text-violet-500 hover:text-violet-800">
+                                                <a href={url}>
+                                                    DEX token address: {YeahTokenAddress}
+                                                </a>
+                                            </p>
                                             <p>
                                                 {" "}
                                                 This will create transaction with index{" "}

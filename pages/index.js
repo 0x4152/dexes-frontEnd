@@ -7,7 +7,7 @@ import { useState, useEffect } from "react"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import networkMapping from "../constants/networkMapping.json"
 import DexABI from "../constants/DexV1abi.json"
-import YEAHABI from "../constants/YEAHabi.json"
+import DEXABI from "../constants/DEXabi.json"
 import WBTCabi from "../constants/WBTC.json"
 import LPTokenabi from "../constants/LPTokenabi.json"
 import { Card, useNotification } from "web3uikit"
@@ -26,7 +26,7 @@ export default function Home() {
     const chainString = chainId ? parseInt(chainId).toString() : "1337"
 
     const DexAddress = networkMapping[chainString]["DexV1"][0]
-    const YeahTokenAddress = networkMapping[chainString]["YeahToken"][0]
+    const DEXTokenAddress = networkMapping[chainString]["DEXToken"][0]
     const LPTokenAddress = networkMapping[chainString]["LPToken"][0]
     //stateVariables
     const [dexDisplayed, setDexDisplayed] = useState(0)
@@ -320,7 +320,7 @@ export default function Home() {
     //contract functions
     const { runContractFunction: allowance } = useWeb3Contract({
         abi: WBTCabi,
-        contractAddress: YeahTokenAddress,
+        contractAddress: DEXTokenAddress,
         functionName: "allowance",
         params: {
             _owner: account,
@@ -337,7 +337,7 @@ export default function Home() {
     })
     const { runContractFunction: approveDeposit } = useWeb3Contract({
         abi: WETHabi,
-        contractAddress: YeahTokenAddress,
+        contractAddress: DEXTokenAddress,
         functionName: "approve",
         params: {
             guy: DexAddress,
@@ -360,7 +360,7 @@ export default function Home() {
     })
     const { runContractFunction: approveExchange } = useWeb3Contract({
         abi: WETHabi,
-        contractAddress: YeahTokenAddress,
+        contractAddress: DEXTokenAddress,
         functionName: "approve",
         params: {
             guy: DexAddress,
@@ -576,7 +576,7 @@ export default function Home() {
                                             setDepositTokenAmount={setDepositTokenAmount}
                                             depositTokenAmount={depositTokenAmount}
                                             DexAddress={DexAddress}
-                                            YeahTokenAddress={YeahTokenAddress}
+                                            DEXTokenAddress={DEXTokenAddress}
                                             setDepositEthAmount={setDepositEthAmount}
                                             depositEthAmount={depositEthAmount}
                                             tokensToApprove={tokensToApprove}
