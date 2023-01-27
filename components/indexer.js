@@ -14,7 +14,7 @@ export default function Indexer({
     inputIndex,
     setInputIndex,
 }) {
-    const [buttonsArray, setButtonsArray] = useState([0])
+    const [buttonsArray, setButtonsArray] = useState([0, 1, 2, 3, 4, 5, 6, 7])
     function buttonCalculation() {
         let buttons = []
         let range = lastTxIndex - startingIndexForBlock + 1
@@ -28,7 +28,6 @@ export default function Indexer({
     }
 
     useEffect(() => {
-        console.log(buttonsArray)
         buttonCalculation()
     }, [inputIndex, lastTxIndex, txCount])
 

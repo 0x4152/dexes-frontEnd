@@ -7,7 +7,7 @@ import { useState, useEffect } from "react"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import networkMapping from "../constants/networkMapping.json"
 import DexABI from "../constants/DexV1abi.json"
-import YEAHABI from "../constants/YEAHabi.json"
+import DEXABI from "../constants/DEXabi.json"
 import WBTCabi from "../constants/WBTC.json"
 import LPTokenabi from "../constants/LPTokenabi.json"
 import { Card, useNotification } from "web3uikit"
@@ -28,12 +28,11 @@ export default function Home() {
     const chainString = chainId ? parseInt(chainId).toString() : "1337"
 
     const DexAddress = networkMapping[chainString]["DexV1"][0]
-    const YeahTokenAddress = networkMapping[chainString]["YeahToken"][0]
+    const DEXTokenAddress = networkMapping[chainString]["DEXToken"][0]
     const LPTokenAddress = networkMapping[chainString]["LPToken"][0]
     const tokenControlAddress = networkMapping[chainString]["TokenControl"][0]
-    const tokenAddressString = YeahTokenAddress.toString()
+    const tokenAddressString = DEXTokenAddress.toString()
     const url = "https://goerli.etherscan.io/address/" + tokenAddressString + ""
-    console.log(url)
     //stateVariables
     const [owners, setOwners] = useState(0)
     const [txCount, setTxCount] = useState(0)
@@ -101,7 +100,7 @@ export default function Home() {
         if (isWeb3Enabled) {
             updateUI()
         }
-    }, [isWeb3Enabled, inputIndex, lastTxIndex, isOwner])
+    }, [isWeb3Enabled, inputIndex, lastTxIndex, isOwner, showStepByStep])
 
     ///////////////////////////////////////////////////////////
 
@@ -115,17 +114,17 @@ export default function Home() {
     }
 
     const handleMintErc20Click = () => {
-        mint1YEAH()
+        mint1DEX()
     }
-    const mint1YEAH = () => {
+    const mint1DEX = () => {
         erc20Mint({
             onError: (error) => {
                 console.log(error)
             },
-            onSuccess: (tx) => handleMint1YeahSuccess(tx),
+            onSuccess: (tx) => handleMint1DEXSuccess(tx),
         })
     }
-    const handleMint1YeahSuccess = () => {
+    const handleMint1DEXSuccess = () => {
         dispatch({
             type: "success",
             message: "Transaction sent - wait for transaction confirmation and refresh the page",
@@ -280,7 +279,7 @@ export default function Home() {
         contractAddress: tokenControlAddress,
         functionName: "Mint1",
         params: {
-            erc20ContractAddress: YeahTokenAddress,
+            erc20ContractAddress: DEXTokenAddress,
         },
     })
     return (
@@ -298,11 +297,11 @@ export default function Home() {
                                             className="block text-gray-700 text-xl font-bold mb-2"
                                             for="username"
                                         >
-                                            Yeah Token Multi-Sig
+                                            DEX Token Multi-Sig
                                         </label>
                                         <p className="my-2">
                                             This Dapp interacts with a smart contract that controls
-                                            the minting of YEAH tokens.{" "}
+                                            the minting of DEX tokens.{" "}
                                         </p>
                                         <p className="my-2">
                                             To be able to interact with this multi-sig you will have
@@ -337,6 +336,9 @@ export default function Home() {
                                                 Show step by step instructions
                                             </button>
                                         )}
+                                        <p className="my-2 text-violet-500 hover:text-violet-800">
+                                            <a href={url}>DEX token address: {DEXTokenAddress}</a>
+                                        </p>
                                     </div>
                                 </form>
                                 <p className="text-center text-gray-500 text-xs"></p>
@@ -357,7 +359,7 @@ export default function Home() {
                                                 transaction to be included in a block.
                                             </p>
                                             <p>
-                                                2. Click mint 1 YEAH. This will queue a transaction,
+                                                2. Click mint 1 DEX. This will queue a transaction,
                                                 it will then be possible to confirm the transaction.
                                             </p>
                                             <p>
@@ -371,7 +373,7 @@ export default function Home() {
                                             </p>{" "}
                                             <p>
                                                 5. Once the transaction has two confirmations, it
-                                                can be executed, minting 1 Yeah token to the account
+                                                can be executed, minting 1 DEX token to the account
                                                 that called the mint function.
                                             </p>
                                             <p></p>
@@ -556,7 +558,7 @@ export default function Home() {
                                                     class="bg-violet-400 hover:bg-violet-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                                     type="button"
                                                 >
-                                                    Mint 0.1 YEAH to your account
+                                                    Mint 0.1 DEX to your account
                                                 </button>
                                             ) : (
                                                 <button
@@ -564,14 +566,10 @@ export default function Home() {
                                                     class="bg-red-400 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                                     type="button"
                                                 >
-                                                    Mint 0.1 YEAH to your account
+                                                    Mint 0.1 DEX to your account
                                                 </button>
                                             )}
-                                            <p className="my-2 text-violet-500 hover:text-violet-800">
-                                                <a href={url}>
-                                                    DEX token address: {YeahTokenAddress}
-                                                </a>
-                                            </p>
+
                                             <p>
                                                 {" "}
                                                 This will create transaction with index{" "}
