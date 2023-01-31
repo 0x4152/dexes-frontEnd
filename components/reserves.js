@@ -30,11 +30,14 @@ export default function Reserves({
     setWithdrawAmount,
 }) {
     const { isWeb3Enabled, chainId, account } = useMoralis()
+    const LPTokenAddressString = LPTokenAddress.toString()
+    const url = "https://goerli.etherscan.io/address/" + LPTokenAddressString + ""
     const [data, setData] = useState({
         labels: ["ETH reserves", "DEX reserves"],
         datasets: [{ label: "Tokens", data: [ethReserves, tokenReserves] }],
         backgroundColor: ["red"],
     })
+
     const [showAlertDeposit, setShowAlertDeposit] = useState(false)
     const [showAlertWithdraw, setShowAlertWithdraw] = useState(false)
     function handleDepositChange(e) {
@@ -183,19 +186,15 @@ export default function Reserves({
                             >
                                 Deposit and Withdraw Liquidity
                             </label>
-
                             <label
                                 className="block text-gray-500 text-m font-bold mb-2"
                                 for="username"
                             >
                                 You own {parseFloat(Number(LPTokens).toFixed(5))} LP tokens.
-                            </label>
-                            <label
-                                className="block text-gray-500 text-xs font-bold mb-2"
-                                for="username"
-                            >
-                                LP token address: {LPTokenAddress}
-                            </label>
+                            </label>{" "}
+                            <p className="my-2 text-violet-500 hover:text-violet-800">
+                                <a href={url}>LP token address: {LPTokenAddress}</a>
+                            </p>
                             {tokensApproved ? (
                                 tokensApproved >= tokensToApprove ? (
                                     <Alert severity="success">

@@ -44,6 +44,7 @@ export default function Home() {
     const [depositEthAmount, setDepositEthAmount] = useState(0)
     const [tokenAmountToApproveFinal, setTokenAmountToApproveFinal] = useState(0)
     const [withdrawAmount, setWithdrawAmount] = useState(0)
+    const [showExp, setShowExp] = useState(0)
     //calculations
     async function ethToTokensBoughtCalculation() {
         let msgValue = ethers.utils.parseEther(tokenAmount.toString())
@@ -428,7 +429,9 @@ export default function Home() {
                     chainString == 5 ? (
                         <div className=" container w-100 mx-12  ">
                             <div>
-                                {dexDisplayed ? (
+                                {showExp ? (
+                                    <div></div>
+                                ) : dexDisplayed ? (
                                     <div>
                                         <ul class="flex">
                                             <li class="mr-3 py-1">
@@ -489,7 +492,27 @@ export default function Home() {
                                         />
                                     </div>
                                 )}
-                            </div>
+                            </div>{" "}
+                            {showExp ? (
+                                <div></div>
+                            ) : (
+                                <div className="flex justify-left my-5">
+                                    <button
+                                        onClick={() => setShowExp(1)}
+                                        class="inline-block border hover:bg-blue-800 border-blue-500 rounded py-1 px-3 bg-blue-500 text-white"
+                                        href="#"
+                                    >
+                                        What is this and how does it work?
+                                    </button>
+                                </div>
+                            )}
+                            <Explanation
+                                ethReserves={EthReserves}
+                                tokenReserves={TokenReserves}
+                                showExp={showExp}
+                                setShowExp={setShowExp}
+                                DexAddress={DexAddress}
+                            />
                         </div>
                     ) : (
                         <div className="py-4 px-4 font-mono"> Thank you for your patience </div>
@@ -500,101 +523,105 @@ export default function Home() {
                         Web3 currently not enabled, please connect your wallet
                     </div>
                 )}
-                {isWeb3Enabled ? (
-                    chainString == 5 ? (
-                        <div className="justify-center container">
-                            <div>
-                                {reservesDisplayed ? (
-                                    <div>
-                                        <ul class="flex">
-                                            <li class="mr-3 py-1">
-                                                <a
-                                                    class="inline-block border border-fuchsia-700 rounded py-1 px-3 bg-fuchsia-700 text-white"
-                                                    href="#"
-                                                >
-                                                    Bar chart
-                                                </a>
-                                            </li>
-                                            <li class="mr-3 py-1">
-                                                <button
-                                                    onClick={handleGraphClick}
-                                                    class="inline-block border border-white rounded bg-white  hover:border-gray-200 text-fuchsia-700 hover:bg-gray-200 py-1 px-3"
-                                                    href="#"
-                                                >
-                                                    Graph
-                                                </button>
-                                            </li>
-                                        </ul>
-                                        <Reserves
-                                            tokenReserves={TokenReserves}
-                                            ethReserves={EthReserves}
-                                            tokensApproved={tokensApproved}
-                                            setDepositTokenAmount={setDepositTokenAmount}
-                                            depositTokenAmount={depositTokenAmount}
-                                            onDepositClick={handleDepositClick}
-                                            onApproveClick={handleApproveClick}
-                                            setDepositEthAmount={setDepositEthAmount}
-                                            depositEthAmount={depositEthAmount}
-                                            tokensToApprove={tokensToApprove}
-                                            tokenAmount={tokenAmount}
-                                            dexDisplayed={dexDisplayed}
-                                            expectedTokenAmount={expectedTokenAmount}
-                                            expectedEthAmount={expectedEthAmount}
-                                            withdrawClick={handleWithdrawClick}
-                                            LPTokens={LPTokens}
-                                            LPTokenAddress={LPTokenAddress}
-                                            withdrawAmount={withdrawAmount}
-                                            setWithdrawAmount={setWithdrawAmount}
-                                        />
-                                    </div>
-                                ) : (
-                                    <div>
-                                        <ul class="flex">
-                                            <li class="mr-3 py-1">
-                                                <button
-                                                    onClick={handleBarClick}
-                                                    class="inline-block border border-white rounded bg-white hover:border-gray-200 text-fuchsia-700 hover:bg-gray-200 py-1 px-3"
-                                                    href="#"
-                                                >
-                                                    Bar chart
-                                                </button>
-                                            </li>
-                                            <li class="mr-3 py-1">
-                                                <a
-                                                    class="inline-block border border-fuchsia-700 rounded py-1 px-3 bg-fuchsia-700 text-white"
-                                                    href="#"
-                                                >
-                                                    Graph
-                                                </a>
-                                            </li>
-                                        </ul>
-                                        <Graph
-                                            tokenReserves={TokenReserves}
-                                            ethReserves={EthReserves}
-                                            tokensApproved={tokensApproved}
-                                            setDepositTokenAmount={setDepositTokenAmount}
-                                            depositTokenAmount={depositTokenAmount}
-                                            DexAddress={DexAddress}
-                                            DEXTokenAddress={DEXTokenAddress}
-                                            setDepositEthAmount={setDepositEthAmount}
-                                            depositEthAmount={depositEthAmount}
-                                            tokensToApprove={tokensToApprove}
-                                            tokenAmount={tokenAmount}
-                                            dexDisplayed={dexDisplayed}
-                                            expectedTokenAmount={expectedTokenAmount}
-                                            expectedEthAmount={expectedEthAmount}
-                                            setTokenAmount={setTokenAmount}
-                                            setDexDisplayed={setDexDisplayed}
-                                        />
-                                    </div>
-                                )}
+                {!showExp ? (
+                    isWeb3Enabled ? (
+                        chainString == 5 ? (
+                            <div className="justify-center container">
+                                <div>
+                                    {reservesDisplayed ? (
+                                        <div>
+                                            <ul class="flex">
+                                                <li class="mr-3 py-1">
+                                                    <a
+                                                        class="inline-block border border-fuchsia-700 rounded py-1 px-3 bg-fuchsia-700 text-white"
+                                                        href="#"
+                                                    >
+                                                        Bar chart
+                                                    </a>
+                                                </li>
+                                                <li class="mr-3 py-1">
+                                                    <button
+                                                        onClick={handleGraphClick}
+                                                        class="inline-block border border-white rounded bg-white  hover:border-gray-200 text-fuchsia-700 hover:bg-gray-200 py-1 px-3"
+                                                        href="#"
+                                                    >
+                                                        Graph
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                            <Reserves
+                                                tokenReserves={TokenReserves}
+                                                ethReserves={EthReserves}
+                                                tokensApproved={tokensApproved}
+                                                setDepositTokenAmount={setDepositTokenAmount}
+                                                depositTokenAmount={depositTokenAmount}
+                                                onDepositClick={handleDepositClick}
+                                                onApproveClick={handleApproveClick}
+                                                setDepositEthAmount={setDepositEthAmount}
+                                                depositEthAmount={depositEthAmount}
+                                                tokensToApprove={tokensToApprove}
+                                                tokenAmount={tokenAmount}
+                                                dexDisplayed={dexDisplayed}
+                                                expectedTokenAmount={expectedTokenAmount}
+                                                expectedEthAmount={expectedEthAmount}
+                                                withdrawClick={handleWithdrawClick}
+                                                LPTokens={LPTokens}
+                                                LPTokenAddress={LPTokenAddress}
+                                                withdrawAmount={withdrawAmount}
+                                                setWithdrawAmount={setWithdrawAmount}
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <ul class="flex">
+                                                <li class="mr-3 py-1">
+                                                    <button
+                                                        onClick={handleBarClick}
+                                                        class="inline-block border border-white rounded bg-white hover:border-gray-200 text-fuchsia-700 hover:bg-gray-200 py-1 px-3"
+                                                        href="#"
+                                                    >
+                                                        Bar chart
+                                                    </button>
+                                                </li>
+                                                <li class="mr-3 py-1">
+                                                    <a
+                                                        class="inline-block border border-fuchsia-700 rounded py-1 px-3 bg-fuchsia-700 text-white"
+                                                        href="#"
+                                                    >
+                                                        Graph
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            <Graph
+                                                tokenReserves={TokenReserves}
+                                                ethReserves={EthReserves}
+                                                tokensApproved={tokensApproved}
+                                                setDepositTokenAmount={setDepositTokenAmount}
+                                                depositTokenAmount={depositTokenAmount}
+                                                DexAddress={DexAddress}
+                                                DEXTokenAddress={DEXTokenAddress}
+                                                setDepositEthAmount={setDepositEthAmount}
+                                                depositEthAmount={depositEthAmount}
+                                                tokensToApprove={tokensToApprove}
+                                                tokenAmount={tokenAmount}
+                                                dexDisplayed={dexDisplayed}
+                                                expectedTokenAmount={expectedTokenAmount}
+                                                expectedEthAmount={expectedEthAmount}
+                                                setTokenAmount={setTokenAmount}
+                                                setDexDisplayed={setDexDisplayed}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
                             </div>
-                        </div>
+                        ) : (
+                            <div className="py-4 px-4 font-mono"> Thank you for your patience </div>
+                        )
                     ) : (
-                        <div className="py-4 px-4 font-mono"> Thank you for your patience </div>
+                        <div class="font-mono"> </div>
                     )
                 ) : (
-                    <div class="font-mono"> </div>
+                    <div></div>
                 )}
             </div>
         </div>

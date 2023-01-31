@@ -8,16 +8,16 @@ import { useWeb3Contract, useMoralis } from "react-moralis"
 import { ethers } from "ethers"
 import { parse } from "graphql"
 export default function Explanation({
-    tokenAmount,
-    dexDisplayed,
+    setShowExp,
+    showExp,
     ethReserves,
     tokenReserves,
-    expectedEthAmount,
-    expectedTokenAmount,
-    setTokenAmount,
-    setDexDisplayed,
+    DexAddress,
 }) {
-    const [showExp, setShowExp] = useState(0)
+    const DexAddressString = DexAddress.toString()
+    const url = "https://goerli.etherscan.io/address/" + DexAddressString + ""
+    const [showMath, setShowMath] = useState(false)
+
     function ethToTokensBoughtCalculation(tokenAmountExample) {
         let msgValue = tokenAmountExample
 
@@ -32,11 +32,11 @@ export default function Explanation({
     }
     return (
         <div>
-            <div className="w-full max-w-xl min-h-4xl hover:bg-slate-300">
-                <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                    <div className="mb-4">
-                        <div className="flex items-center justify-between m-2"></div>{" "}
-                        {showExp ? (
+            {showExp ? (
+                <div className="w-full max-w-screen min-h-4xl hover:bg-slate-300">
+                    <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                        <div className="mb-4">
+                            <div className="flex items-center justify-between m-2"></div>{" "}
                             <div>
                                 <button
                                     onClick={() => setShowExp(0)}
@@ -47,12 +47,14 @@ export default function Explanation({
                                 </button>
                                 <div className="text-xl">
                                     <p className="text-left text-gray-500  m-3">
-                                        {" "}
+                                        <p className="text-left text-gray-500  my-3 font-bold">
+                                            Liquidity Pool:
+                                        </p>{" "}
                                         A liquidity pool is a smart contract that holds two assets
                                         to facilitate exchanges between these assets in a
                                         decentralized manner. This liquidity pool is based on the
                                         Uniswap V1 protocol, which facilitates exchanges between ETH
-                                        and any ERC20 token.
+                                        and ERC20 tokens.
                                     </p>
                                     <p className="text-left text-gray-500  m-3">
                                         {" "}
@@ -63,6 +65,9 @@ export default function Explanation({
                                         leverages math and market participants to give a fair market
                                         value to anyone that desires to trade a pair of assets,
                                         without relying on external parties.
+                                    </p>
+                                    <p className="m-3 text-violet-500 hover:text-violet-800 ">
+                                        <a href={url}>Check the contract at {DexAddress}</a>
                                     </p>
                                     <p className="text-left text-gray-500  m-3 font-bold">
                                         Constant Product:
@@ -75,6 +80,61 @@ export default function Explanation({
                                         liquidity reserve of one and withdrawing from the reserve of
                                         the other.
                                     </p>
+                                    {!showMath ? (
+                                        <div className="bg-pink-500 rounded-xl justify-center ">
+                                            {" "}
+                                            <button
+                                                onClick={() => setShowMath(1)}
+                                                class="m-3 inline-block border border-blue-400 rounded bg-white  hover:border-gray-200 text-blue-500 hover:bg-gray-200 py-1 px-3"
+                                                href="#"
+                                            >
+                                                Hide math
+                                            </button>
+                                            <div className="flex justify-center">
+                                                <p className="text-center text-3xl text-bold m-3 text-white">
+                                                    {" "}
+                                                    y * x = k
+                                                </p>
+                                            </div>
+                                            <p className="text-center  text-bold m-3 text-white">
+                                                {" "}
+                                                Where y and x represent the two reserves to be
+                                                traded with, and k represents a constant that is
+                                                mantained.
+                                            </p>
+                                            <p className="text-center  text-bold m-3 text-white">
+                                                {" "}
+                                                We can also represent this formula as:
+                                            </p>{" "}
+                                            <div className="flex justify-center">
+                                                <p className="text-center text-3xl text-bold m-3 text-white">
+                                                    {" "}
+                                                    y * x = y' * x'
+                                                </p>
+                                            </div>
+                                            <p className="text-center  text-bold m-3 text-white">
+                                                {" "}
+                                                y' and x' being the new values that the liquidity
+                                                pool holds while mantaining the constant.
+                                            </p>{" "}
+                                            <p className="text-center  text-bold m-3 text-white">
+                                                {" "}
+                                                The new value of x, x' would represent the reserves
+                                                of token x after the transfer, therefore a larger
+                                                amount than x.
+                                            </p>{" "}
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <button
+                                                onClick={() => setShowMath(0)}
+                                                class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 m-3 rounded focus:outline-none focus:shadow-outline"
+                                                type="button"
+                                            >
+                                                x * y = k
+                                            </button>
+                                        </div>
+                                    )}
                                     <p className="text-left text-gray-500  m-3">
                                         {" "}
                                         The exchange price is determined by the reserve ratio
@@ -101,12 +161,12 @@ export default function Explanation({
                                     <p className="text-left text-gray-500  m-3">
                                         {" "}
                                         1 ETH = {ethToTokensBoughtCalculation(1)}{" "}
-                                        <bold>YEAH tokens</bold>
+                                        <bold>DEX tokens</bold>
                                     </p>
                                     <p className="text-left text-gray-500  m-3">
                                         {" "}
                                         10 ETH = {ethToTokensBoughtCalculation(10)}{" "}
-                                        <bold>YEAH tokens</bold>
+                                        <bold>DEX tokens</bold>
                                     </p>{" "}
                                     <p className="text-left text-gray-500  m-3">
                                         On this example we can see that 10 ETH doesn't return 10
@@ -141,48 +201,19 @@ export default function Explanation({
                                         the portion of liquidity represented by his LP tokens,
                                         burning said tokens in the process. The portion of liquidity
                                         extracted is calculated from the total liquidity users
-                                        provided and the trading fees collected,therefore it will
+                                        provided and the trading fees collected, therefore it will
                                         inherently include the proportional part of the trading fees
                                         the LP token owner is entitled to.
                                     </p>
                                 </div>
                             </div>
-                        ) : (
-                            <div className="flex justify-center">
-                                <button
-                                    onClick={() => setShowExp(1)}
-                                    class="inline-block border hover:bg-blue-800 border-blue-500 rounded py-1 px-3 bg-blue-500 text-white"
-                                    href="#"
-                                >
-                                    What's a Liquidity Pool and how does it work?
-                                </button>
-                            </div>
-                        )}
-                        {showExp ? (
-                            <div>
-                                <button
-                                    onClick={() => setShowExp(0)}
-                                    class="m-2 inline-block border border-blue-400 rounded bg-white  hover:border-gray-200 text-blue-500 hover:bg-gray-200 py-1 px-3"
-                                    href="#"
-                                >
-                                    Hide
-                                </button>
-                            </div>
-                        ) : (
-                            <div className="flex justify-center">
-                                <button
-                                    onClick={() => setShowExp(1)}
-                                    class="inline-block border hover:bg-blue-800 border-blue-500 rounded py-1 px-3 bg-blue-500 text-white"
-                                    href="#"
-                                >
-                                    How it the amount recieved calculated?
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                </form>
-                <p className="text-center text-gray-500 text-xs"></p>
-            </div>
+                        </div>
+                    </form>
+                    <p className="text-center text-gray-500 text-xs"></p>
+                </div>
+            ) : (
+                <div className="flex justify-center"></div>
+            )}
         </div>
     )
 }
