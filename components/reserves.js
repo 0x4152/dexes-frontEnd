@@ -209,7 +209,7 @@ export default function Reserves({
                                             the ETH quantity you want to deposit, you will need to
                                             approve
                                             <strong> {tokensToApprove} </strong>
-                                            DEX tokens to deposit
+                                            DEX tokens to deposit{" "}
                                             <strong>{depositEthAmount} </strong>
                                             ETH
                                         </Alert>
@@ -221,9 +221,8 @@ export default function Reserves({
                                             </p>
                                             <p className="m-4">
                                                 Click on the approve button to approve this contract
-                                                to manipulate
-                                                <strong>{tokensToApprove}</strong>
-                                                DEX tokens from your account.
+                                                to manipulate <strong>{tokensToApprove}</strong> DEX
+                                                tokens from your account.
                                             </p>
                                         </Alert>
                                     </div>
@@ -291,7 +290,7 @@ export default function Reserves({
                                 placeholder="LP token amount to withdraw"
                             />
 
-                            {LPTokens > withdrawAmount ? (
+                            {LPTokens >= withdrawAmount ? (
                                 <button
                                     onClick={withdrawClick}
                                     class="bg-violet-400 hover:bg-violet-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

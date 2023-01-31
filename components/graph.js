@@ -222,28 +222,95 @@ export default function Graph({
                 ethBalance += increments
             }
         }
-        setData({
-            datasets: [
-                {
-                    type: "scatter",
-                    label: "Current Reserves",
-                    data: [{ x: ethReserves, y: tokenReserves }],
-                    backgroundColor: ["red"],
-                },
-                {
-                    type: "scatter",
-                    label: "Reserves after transaction",
-                    data: [pointData],
-                    backgroundColor: ["green"],
-                },
-                {
-                    type: "scatter",
-                    label: "possible ETH / DEX Reserves",
-                    data: results,
-                    backgroundColor: ["rgb(188, 191, 188)"],
-                },
-            ],
-        })
+        if (tokenAmount != 0) {
+            setData({
+                datasets: [
+                    {
+                        type: "scatter",
+                        label: "Current Reserves",
+                        data: [{ x: ethReserves, y: tokenReserves }],
+                        backgroundColor: ["red"],
+                    },
+                    {
+                        type: "scatter",
+                        label: "Reserves after transaction",
+                        data: [pointData],
+                        backgroundColor: ["green"],
+                    },
+                    {
+                        type: "scatter",
+                        label: "possible ETH / DEX Reserves",
+                        data: results,
+                        backgroundColor: ["rgb(188, 191, 188)"],
+                    },
+                ],
+            })
+        } else {
+            setData({
+                datasets: [
+                    {
+                        type: "scatter",
+                        label: "Current Reserves",
+                        data: [
+                            { x: 1, y: 1 },
+                            { x: 1, y: 2 },
+                            { x: 1, y: 3 },
+                            { x: 1, y: 4 },
+                            { x: 1, y: 5 },
+                            { x: 1, y: 6 },
+                            { x: 1, y: 7 },
+                            { x: 1, y: 8 },
+                            { x: 2, y: 8 },
+                            { x: 3, y: 7 },
+                            { x: 3, y: 6 },
+                            { x: 3, y: 5 },
+                            { x: 3, y: 4 },
+                            { x: 3, y: 3 },
+                            { x: 3, y: 2 },
+                            { x: 2, y: 1 },
+                        ],
+                        backgroundColor: ["rgb(44, 23, 120)"],
+                    },
+                    {
+                        type: "scatter",
+                        label: "Reserves after transaction",
+                        data: [
+                            { x: 4, y: 1 },
+                            { x: 4, y: 2 },
+                            { x: 4, y: 3 },
+                            { x: 4, y: 4 },
+                            { x: 4, y: 5 },
+                            { x: 4, y: 6 },
+                            { x: 4, y: 7 },
+                            { x: 4, y: 8 },
+                            { x: 5, y: 1 },
+                            { x: 6, y: 1 },
+                            { x: 5, y: 5 },
+                            { x: 6, y: 5 },
+                            { x: 5, y: 8 },
+                            { x: 6, y: 8 },
+                        ],
+                        backgroundColor: ["rgb(223, 182, 242)"],
+                    },
+                    {
+                        type: "scatter",
+                        label: "possible ETH / DEX Reserves",
+                        data: [
+                            { x: 7, y: 1 },
+                            { x: 8, y: 2 },
+                            { x: 9, y: 3 },
+                            { x: 10, y: 4 },
+                            { x: 11, y: 5 },
+                            { x: 7, y: 5 },
+                            { x: 8, y: 4 },
+                            { x: 10, y: 2 },
+                            { x: 11, y: 1 },
+                        ],
+                        backgroundColor: ["red"],
+                    },
+                ],
+            })
+        }
     }
 
     useEffect(() => {

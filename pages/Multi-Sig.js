@@ -309,9 +309,9 @@ export default function Home() {
                                             to be able to interact with the multi-sig{" "}
                                         </p>
                                         <p className="my-2">
-                                            Once you are an owner you will be able to queue
-                                            transactions, confirm and revoke your confirmation, and
-                                            lastly execute those transactions.
+                                            Once you are a owner you will be able to queue
+                                            transactions, confirm transactions and revoke your
+                                            confirmation, and lastly execute those transactions.
                                         </p>
                                         <p className="my-2">
                                             To execute a transaction the transaction needs 2
@@ -599,7 +599,10 @@ export default function Home() {
                     <div> not in goerli</div>
                 )
             ) : (
-                <div> web3 not enabled</div>
+                <div class="font-mono text-xl text-white m-16">
+                    {" "}
+                    Web3 currently not enabled, please connect your wallet
+                </div>
             )}
         </div>
     )

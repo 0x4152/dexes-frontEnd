@@ -29,7 +29,7 @@ export default function Home() {
     const DEXTokenAddress = networkMapping[chainString]["DEXToken"][0]
     const LPTokenAddress = networkMapping[chainString]["LPToken"][0]
     //stateVariables
-    const [dexDisplayed, setDexDisplayed] = useState(0)
+    const [dexDisplayed, setDexDisplayed] = useState(1)
     const [reservesDisplayed, setReservesDisplayed] = useState(1)
     const [tokenAmount, setTokenAmount] = useState(0)
     const [depositTokenAmount, setDepositTokenAmount] = useState(0)
@@ -86,7 +86,6 @@ export default function Home() {
         let LPTokens = await balanceOf()
         let LPTokensFormatted = parseFloat(LPTokens) / 1000000000000000000
         setLPTokens(LPTokensFormatted)
-        console.log(`LPTokensFormatted${LPTokensFormatted}`)
         if (dexDisplayed) {
             ethToTokensBoughtCalculation()
 
@@ -113,7 +112,7 @@ export default function Home() {
         if (/^\d+\.*(\d+)*$/.test(tokenAmount)) {
             updateExpecteds() ///////////////tokenAmount desync
         } else {
-            console.log("nope")
+            console.log("incorrect input expecteds")
         }
     }, [
         tokenAmount,
@@ -129,7 +128,7 @@ export default function Home() {
         if (isWeb3Enabled) {
             updateUI()
         }
-    }, [isWeb3Enabled])
+    }, [isWeb3Enabled, tokensApproved, depositEthAmount])
 
     ///////////////////////////////////////////////////////////
 
@@ -356,7 +355,7 @@ export default function Home() {
         contractAddress: DexAddress,
         functionName: "withdraw",
 
-        params: { amount: ethers.utils.parseEther(depositEthAmount.toString()) },
+        params: { amount: ethers.utils.parseEther(withdrawAmount.toString()) },
     })
     const { runContractFunction: approveExchange } = useWeb3Contract({
         abi: WETHabi,
