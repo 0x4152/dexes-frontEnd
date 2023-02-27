@@ -91,23 +91,23 @@ export default function Explanation({
                                                 Hide math
                                             </button>
                                             <div className="flex justify-center">
-                                                <p className="text-center text-3xl text-bold m-3 text-white">
+                                                <p className="text-center text-3xl text-bold m-9 text-white">
                                                     {" "}
                                                     y * x = k
                                                 </p>
                                             </div>
-                                            <p className="text-center  text-bold m-3 text-white">
+                                            <p className="text-center  text-bold m-5 text-white">
                                                 {" "}
                                                 Where y and x represent the two reserves to be
                                                 traded with, and k represents a constant that is
                                                 mantained.
                                             </p>
-                                            <p className="text-center  text-bold m-3 text-white">
+                                            <p className="text-center  text-bold m-9 text-white">
                                                 {" "}
                                                 We can also represent this formula as:
                                             </p>{" "}
                                             <div className="flex justify-center">
-                                                <p className="text-center text-3xl text-bold m-3 text-white">
+                                                <p className="text-center text-3xl text-bold m-9 text-white">
                                                     {" "}
                                                     y * x = y' * x'
                                                 </p>
@@ -115,14 +115,98 @@ export default function Explanation({
                                             <p className="text-center  text-bold m-3 text-white">
                                                 {" "}
                                                 y' and x' being the new values that the liquidity
-                                                pool holds while mantaining the constant.
+                                                pool will hold after a trade while mantaining the
+                                                constant.
                                             </p>{" "}
                                             <p className="text-center  text-bold m-3 text-white">
                                                 {" "}
-                                                The new value of x, x' would represent the reserves
-                                                of token x after the transfer, therefore a larger
-                                                amount than x.
+                                                If we were to trade asset x for asset y, x' would
+                                                represent the reserves of asset x after the
+                                                transfer, therefore a larger amount than x.
                                             </p>{" "}
+                                            <p className="text-center  text-bold m-3 text-white">
+                                                {" "}
+                                                Furthermore, y' would represent the reserves of
+                                                asset y after the trade, and therefore it will be
+                                                smaller than y.
+                                            </p>{" "}
+                                            <p className="text-center  text-bold m-3 text-white">
+                                                {" "}
+                                                Since we added asset x to the pool, we will need to
+                                                extract enough of asset y from the pool so that the
+                                                contant k is mantained.
+                                            </p>{" "}
+                                            <div className="m-7 flex justify-between">
+                                                <div className="">
+                                                    <p className="text-left text-xl text-bold m-3 text-white min-w-max ">
+                                                        {" "}
+                                                        x + a = x'
+                                                    </p>
+                                                </div>
+                                                <p className="text-center  text-bold m-3 text-white">
+                                                    {" "}
+                                                    We can define the resulting reserves of x, or x'
+                                                    as the initial reserves plus the amount we are
+                                                    exchanging.
+                                                </p>{" "}
+                                            </div>
+                                            <div className="m-7 flex justify-between">
+                                                <div className="">
+                                                    <p className="text-left text-xl text-bold m-3 text-white min-w-max ">
+                                                        {" "}
+                                                        y - b = b'
+                                                    </p>
+                                                </div>
+                                                <p className="text-center text-sm text-bold m-5 text-white">
+                                                    {" "}
+                                                    We can also define the resulting reserves of y,
+                                                    or y' as the initial reserves minus the amount
+                                                    we are getting in exchange.
+                                                </p>{" "}
+                                            </div>
+                                            <div className="m-7 flex justify-between">
+                                                <div className="">
+                                                    <p className="text-left text-xl text-bold m-3 text-white min-w-max ">
+                                                        {" "}
+                                                        (x + a)*(y - b) = k
+                                                    </p>
+                                                </div>
+                                                <p className="text-center text-sm text-bold m-5 text-white">
+                                                    {" "}
+                                                    We therefore can arrive to the formula that
+                                                    mantains the constant k reprented by x' * y'
+                                                </p>{" "}
+                                            </div>
+                                            <div className="m-7 flex justify-between">
+                                                <div className="">
+                                                    <p className="text-left text-xl text-bold m-3 text-white min-w-max ">
+                                                        {" "}
+                                                        b = (y * a) / (x + a)
+                                                    </p>
+                                                </div>
+                                                <p className="text-center text-sm text-bold m-5 text-white">
+                                                    {" "}
+                                                    Solving to b we obtain the resulting formula
+                                                    that takes into consideration the initial
+                                                    reserves and the amount we are exchaning, and
+                                                    outputs the amount we would recieve in exchange.
+                                                </p>{" "}
+                                            </div>
+                                            <div className="m-7 flex justify-center">
+                                                <div className="flex justify-center">
+                                                    <p className="text-left text-xl text-bold m-3 text-white min-w-max ">
+                                                        {" "}
+                                                        b = (y * a * 0,997) / (x + a * 0,997)
+                                                    </p>
+                                                </div>
+                                                <p className="text-center text-sm text-bold m-5 text-white">
+                                                    {" "}
+                                                    The final formula represented in the smart
+                                                    contract takes also into consideration the 0,3%
+                                                    fee which is kept in the liquidity pool, and the
+                                                    remaining 99,7% is transfered to the user.
+                                                </p>{" "}
+                                            </div>
                                         </div>
                                     ) : (
                                         <div>
