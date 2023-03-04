@@ -499,7 +499,7 @@ export default function Home() {
                                 <div className="flex justify-left my-5">
                                     <button
                                         onClick={() => setShowExp(1)}
-                                        class="inline-block border hover:bg-blue-800 border-blue-500 rounded py-1 px-3 bg-blue-500 text-white"
+                                        class="inline-block border hover:bg-fuchsia-800 border-fuchsia-500 rounded py-1 px-3 bg-fuchsia-500 text-white"
                                         href="#"
                                     >
                                         What is this and how does it work?

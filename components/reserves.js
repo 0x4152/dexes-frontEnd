@@ -193,7 +193,9 @@ export default function Reserves({
                                 You own {parseFloat(Number(LPTokens).toFixed(5))} LP tokens.
                             </label>{" "}
                             <p className="my-2 text-violet-500 hover:text-violet-800">
-                                <a href={url}>LP token address: {LPTokenAddress}</a>
+                                <a href={url} target="_blank">
+                                    LP token address: {LPTokenAddress}
+                                </a>
                             </p>
                             {tokensApproved ? (
                                 tokensApproved >= tokensToApprove ? (

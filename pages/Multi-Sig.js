@@ -32,7 +32,9 @@ export default function Home() {
     const LPTokenAddress = networkMapping[chainString]["LPToken"][0]
     const tokenControlAddress = networkMapping[chainString]["TokenControl"][0]
     const tokenAddressString = DEXTokenAddress.toString()
+    const multiSigAddressString = tokenControlAddress.toString()
     const url = "https://goerli.etherscan.io/address/" + tokenAddressString + ""
+    const url2 = "https://goerli.etherscan.io/address/" + multiSigAddressString + ""
     //stateVariables
     const [owners, setOwners] = useState(0)
     const [txCount, setTxCount] = useState(0)
@@ -100,7 +102,7 @@ export default function Home() {
         if (isWeb3Enabled) {
             updateUI()
         }
-    }, [isWeb3Enabled, inputIndex, lastTxIndex, isOwner, showStepByStep])
+    }, [isWeb3Enabled, inputIndex, lastTxIndex, isOwner, showStepByStep, txCount])
 
     ///////////////////////////////////////////////////////////
 
@@ -304,19 +306,30 @@ export default function Home() {
                                             the minting of DEX tokens.{" "}
                                         </p>
                                         <p className="my-2">
-                                            To be able to interact with this multi-sig you will have
-                                            to become an owner. Click on the "become owner" button
-                                            to be able to interact with the multi-sig{" "}
+                                            To be able to interact with this multi-sig and execute
+                                            the minting Mint1 function you will have to become an
+                                            owner. Click on the "become owner" button to be able to
+                                            interact with the multi-sig{" "}
                                         </p>
                                         <p className="my-2">
-                                            Once you are a owner you will be able to queue
-                                            transactions, confirm transactions and revoke your
-                                            confirmation, and lastly execute those transactions.
+                                            Once you are a owner you will be able to queue new
+                                            transactions for the multi-sig to vote if they should go
+                                            through, confirm transactions and revoke your
+                                            confirmation, and lastly execute those transactions if
+                                            they have enough confirmations.
                                         </p>
                                         <p className="my-2">
                                             To execute a transaction the transaction needs 2
                                             confirmations from the owners. You can check the number
-                                            of transactions on the transaction info.
+                                            of confirmations on the transaction info searching them
+                                            by transaction index, and confirm the transaction
+                                            yourself.
+                                        </p>{" "}
+                                        <p className="my-2">
+                                            The Multi-Sig is the only address that has permission to
+                                            execute the minting function from the DEX token ERC20
+                                            contract. When the queued transaction that calls the
+                                            mint function from the Multi-Sig gets executed it mint
                                         </p>
                                         <p></p>
                                         {showStepByStep ? (
@@ -337,7 +350,18 @@ export default function Home() {
                                             </button>
                                         )}
                                         <p className="my-2 text-violet-500 hover:text-violet-800">
-                                            <a href={url}>DEX token address: {DEXTokenAddress}</a>
+                                            <a href={url} target="_blank">
+                                                DEX token address (ERC20): {DEXTokenAddress}
+                                            </a>
+                                        </p>
+                                        <p
+                                            target="_blank"
+                                            className="my-2 text-violet-500 hover:text-violet-800"
+                                        >
+                                            <a href={url2}>
+                                                Token Control Multi-Sig address:{" "}
+                                                {tokenControlAddress}
+                                            </a>
                                         </p>
                                     </div>
                                 </form>
@@ -355,26 +379,28 @@ export default function Home() {
                                                 Step by Step
                                             </label>
                                             <p>
-                                                1. Click add my account to owners. Wait for the
-                                                transaction to be included in a block.
+                                                0. Click on the "add my account to owners" button.
+                                                It will make a call to add your address to the array
+                                                of owners that can interact with the contract. Wait
+                                                for the transaction to be included in a block.
                                             </p>
                                             <p>
-                                                2. Click mint 1 DEX. This will queue a transaction,
+                                                1. Click mint 1 DEX. This will queue a transaction,
                                                 it will then be possible to confirm the transaction.
                                             </p>
                                             <p>
-                                                3. Click "Confirm the transaction" inputing the
+                                                2. Click "Confirm the transaction" inputing the
                                                 transaction index you just created.
                                             </p>
                                             <p>
-                                                4. The transaction will need two confirmations to be
+                                                3. The transaction will need two confirmations to be
                                                 executable. For testing purposes repeat step 1 and
-                                                step 3, inputing the same tx
+                                                step 3, inputing the same tx index.
                                             </p>{" "}
                                             <p>
-                                                5. Once the transaction has two confirmations, it
-                                                can be executed, minting 1 DEX token to the account
-                                                that called the mint function.
+                                                4. Once the transaction has two confirmations, it
+                                                can be executed, minting 0,1 DEX token to the
+                                                account that called the mint function.
                                             </p>
                                             <p></p>
                                         </div>
@@ -414,8 +440,14 @@ export default function Home() {
                                             )}
                                             <div className="h-fit flex items-center justify-center ">
                                                 <div>
+                                                    <label
+                                                        className="block text-gray-700 text-center text-xl font-bold mb-2"
+                                                        for="username"
+                                                    >
+                                                        Transaction Info
+                                                    </label>
                                                     <p className="text-center text-gray-900 text-XL m-2">
-                                                        Transaction {txInfo.txIndex}
+                                                        Transaction Index {txInfo.txIndex}
                                                     </p>{" "}
                                                     <p className="text-center text-gray-900 text-XL m-2">
                                                         Dex tokens minted to address: {txInfo.to}
