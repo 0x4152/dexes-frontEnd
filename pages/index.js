@@ -102,7 +102,9 @@ export default function Home() {
 
     useEffect(() => {
         if (tokenAmount > tokensApproved) {
-            setTokensToApproveExchange(tokenAmount + 0.0000000000000002)
+            setTokensToApproveExchange(tokenAmount)
+        } else {
+            setTokensToApproveExchange(0)
         }
 
         if (/^\d+\.*(\d+)*$/.test(depositTokenAmount)) {
@@ -123,6 +125,7 @@ export default function Home() {
         expectedTokenAmount,
         tokenAmountToApproveFinal,
         withdrawAmount,
+        tokensToApproveExchange,
     ])
 
     useEffect(() => {

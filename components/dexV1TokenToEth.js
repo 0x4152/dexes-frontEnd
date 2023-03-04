@@ -62,7 +62,9 @@ export default function DexV1TokenToEth({
                                 <p className="m-4">
                                     Click on the approve button to approve this contract to
                                     manipulate{" "}
-                                    <strong>{tokensToApproveExchange} DEX tokens </strong>
+                                    <strong>
+                                        {Number(tokensToApproveExchange).toFixed(8)} DEX tokens{" "}
+                                    </strong>
                                     from your account.
                                 </p>
                             </Alert>
