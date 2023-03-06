@@ -2,11 +2,7 @@ import { useState, useEffect } from "react"
 import { Input, Modal, useNotification, Card } from "web3uikit"
 import { Alert } from "@mui/material"
 import { Scatter } from "react-chartjs-2"
-import { Chart as ChartJS } from "chart.js/auto"
 
-import { useWeb3Contract, useMoralis } from "react-moralis"
-import { ethers } from "ethers"
-import { parse } from "graphql"
 export default function Graph({
     tokenAmount,
     dexDisplayed,
@@ -171,7 +167,7 @@ export default function Graph({
             let increments
             let decimals
             if (expectedEthAmount > 5 || expectedEthAmount == 0) {
-                increments = 1
+                increments = 0.1
                 decimals = 0
             } else if (expectedEthAmount > 0.5) {
                 increments = 0.1
@@ -186,10 +182,8 @@ export default function Graph({
                 increments = 0.0001
                 decimals = 4
             }
-
             //Calculate lowest value to set a graph that shows a minimum and a maximum based on those values.
             let lowestValue = pointData.x
-            console.log(increments)
             // The graph has to give some perspective on the trade, to do so it has to show a certain amount of possible
             //balances before and after the points that are involved in the trade. To calculate exactly what range to show
             // a reasonable figure would be the same on each side than the distance between the two points, that being the ethAmount that is exchanged,
@@ -316,7 +310,7 @@ export default function Graph({
     useEffect(() => {
         console.log("useEffect")
         buyPointCalculation()
-    }, [tokenAmount])
+    }, [tokenAmount, expectedEthAmount])
 
     return (
         <div>

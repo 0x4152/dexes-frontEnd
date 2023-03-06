@@ -127,25 +127,6 @@
         "inputs": [
             {
                 "internalType": "address",
-                "name": "erc20ContractAddress",
-                "type": "address"
-            }
-        ],
-        "name": "Mint1",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "txIndex",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
                 "name": "newOwner",
                 "type": "address"
             }
@@ -342,6 +323,25 @@
             }
         ],
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "erc20ContractAddress",
+                "type": "address"
+            }
+        ],
+        "name": "mint01",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "txIndex",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {

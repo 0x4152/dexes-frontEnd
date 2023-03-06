@@ -4,27 +4,18 @@
 import { ConnectButton } from "web3uikit"
 import Link from "next/link"
 import Image from "next/image"
-import sphereImage from "../img/sphere.png"
+import sphereImage from "../img/DEX_Logo.svg"
 
 export default function Header() {
     return (
         <nav
-            className="p-5 border-b-2 flex flex-row justify-between items-center "
+            className="p-5  flex flex-row justify-between items-center "
             onMouseOver={() => console.log("hover over header")}
         >
             <div className="flex justify-center items-center">
                 <Link href="/">
-                    <div className="flex justify-center items-center cursor-pointer ">
-                        <Image
-                            src={sphereImage}
-                            className="py-4 px-4 font-bold text-3xl "
-                            height="90"
-                            width="90"
-                        />
-
-                        <a className=" py-4 px-4 text-white font-bold   justify-left font-mono text-3xl ">
-                            D E X
-                        </a>
+                    <div className="flex justify-center items-center cursor-pointer m-7">
+                        <Image src={sphereImage} className="py-10 px-4 font-bold text-3xl" />
                     </div>
                 </Link>
             </div>

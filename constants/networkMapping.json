@@ -15,16 +15,16 @@
     },
     "5": {
         "DexV1": [
-            "0x7aEC21ef597471669343FBaF23f20F2715c6A588"
+            "0x50273b8BC6D94Dd8d40965858670834c0D7CEEA6"
         ],
         "DEXToken": [
-            "0xE0C9c01631082a0ab66b194fc94E16aDEe30a5d2"
+            "0xEbD2DCDfdaD38FC1f81F372D5f87a870BAAedFcf"
         ],
         "LPToken": [
-            "0xc445EdCf203a7ac877f6BBFd67949Bc63DcC6347"
+            "0x520FE4a575Da1EB9D4BF481d010a9426D3298A12"
         ],
         "TokenControl": [
-            "0xA04A083CC937e25C6D727AA4005568b3F0f8b370"
+            "0x155609d7F670B78B22c04381CDB8C46Ef3553834"
         ]
     },
     "1337": {

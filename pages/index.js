@@ -170,6 +170,7 @@ export default function Home() {
     }
     //////////DEPOSIT//////////////////////////
     const handleDepositClick = () => {
+        console.log("handledepositclick")
         depositLiquidity()
     }
     async function depositLiquidity() {
