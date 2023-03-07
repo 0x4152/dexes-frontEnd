@@ -285,7 +285,7 @@ export default function Home() {
         },
     })
     return (
-        <div className=" min-h-screen my-5">
+        <div className=" min-h-screen mt-5">
             {" "}
             {isWeb3Enabled ? (
                 chainString == 5 ? (
