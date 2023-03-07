@@ -306,8 +306,9 @@ export default function Home() {
                                         <p className="my-2">
                                             To execute a transaction it will need 2 confirmations
                                             from the owners. You can check the number of
-                                            confirmations that the transaction searching them by
-                                            transaction index, and confirm the transaction yourself.
+                                            confirmations that the transaction has by searching them
+                                            by transaction index, and confirm the transaction
+                                            yourself.
                                         </p>{" "}
                                         <p className="my-2">
                                             There is no limit on how many owners this Multi-Sig can
