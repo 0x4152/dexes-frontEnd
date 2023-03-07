@@ -592,7 +592,7 @@ export default function Home() {
                                         </div>
                                         <div className="my-2">
                                             <p className="text-left text-bold text-gray-500 text-m">
-                                                Check a transaction
+                                                Search a transaction
                                             </p>
                                             <input
                                                 onChange={handleTxChange}
