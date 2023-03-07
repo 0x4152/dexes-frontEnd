@@ -243,10 +243,9 @@ export default function Explanation({
                                     </p>
                                     <p className="text-left text-gray-500  m-5">
                                         {" "}
-                                        In simple terms: the higher the amount of asset exchanged,
-                                        the amount of assets recieved will increase but the
-                                        proportion by which it increases will progressively gets
-                                        smaller.
+                                        The higher the amount of asset exchanged, the higher the
+                                        amount of assets recieved but the proportion by which it
+                                        increases will progressively gets smaller.
                                     </p>
                                     <p className="text-left text-gray-500  m-5 font-bold">
                                         Example:
