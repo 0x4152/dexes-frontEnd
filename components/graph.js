@@ -10,8 +10,6 @@ export default function Graph({
     tokenReserves,
     expectedEthAmount,
     expectedTokenAmount,
-    setTokenAmount,
-    setDexDisplayed,
 }) {
     const [graphData, setGraphData] = useState(0)
     const [data, setData] = useState({
@@ -99,6 +97,8 @@ export default function Graph({
             pointData = { x: ethBalance, y: tokenBalance }
         }
 
+        //0.512 ->  0.4096
+        //11.78 ->  9.424
         if (dexDisplayed) {
             //ethToToken
             results = []
@@ -314,17 +314,17 @@ export default function Graph({
 
     return (
         <div>
-            <div className=" max-w-15xl hover:bg-slate-300 font-mono">
+            <div className=" max-w-4xl hover:bg-slate-300 ">
                 <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                     <div className="mb-4">
-                        <label
-                            className="block text-gray-700 text-3xl font-bold m-2"
-                            for="username"
-                        >
-                            ETH / DEX Liquidity Pool
-                        </label>{" "}
+                        <h1 class="flex items-center text-2xl font-bold dark:text-Black">
+                            <span class="bg-blue-100 text-blue-800 text-2xl font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-2">
+                                ETH / DEX
+                            </span>
+                            Liquidity Pool
+                        </h1>
                         <div className="m-2 font-bold text-gray-400">
-                            Current Reserves: {parseFloat(Number(ethReserves).toFixed(5))} ETH/
+                            Current Reserves: {parseFloat(Number(ethReserves).toFixed(5))} ETH /{" "}
                             {parseFloat(Number(tokenReserves).toFixed(5))} DEX
                         </div>
                         {tokenAmount ? (
@@ -368,15 +368,15 @@ export default function Graph({
                             </div>
                             <Scatter data={data} />
                         </div>
-                        <p className=" text-gray-500 text-center text-xl mb-10 ">ETH</p>
+                        <p className=" text-gray-500 text-center text-xl mb-5 ">ETH</p>
                         <p className=" text-gray-500 my-4 mx-3 ">
                             {" "}
                             This graph is a representation of the curve created by the constant
                             product formula, which describes all the possible ratios of ETH and DEX
                             tokens the liquidity pool could have after an exchange transaction, and
-                            therefore it gives us an idea of how prices change depending on the
-                            amount of assets the pool holds compared to the amount of assets we are
-                            adding to the pool.
+                            therefore it gives an idea of how prices change depending on the amount
+                            of assets the pool holds compared to the amount of assets we are adding
+                            to the pool.
                         </p>{" "}
                         {dexDisplayed ? (
                             <div>
@@ -460,10 +460,10 @@ export default function Graph({
                                     </p>
                                 ) : (
                                     <Alert severity="info">
-                                        <p className="m-4">
+                                        <p className="">
                                             Try putting a DEX amount on the Tokens to ETH box!
                                         </p>
-                                        <p className="m-4">
+                                        <p className="">
                                             This will draw a graph that previews the exchange for
                                             that amount
                                         </p>

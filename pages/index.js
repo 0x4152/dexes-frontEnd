@@ -76,10 +76,12 @@ export default function Home() {
         let allowanceFormatted = allowanceUnformatted / 1000000000000000000
         setTokensApproved(allowanceFormatted)
         let liquidity = await getLiquidity()
-        let liquidityFormatted = ethers.utils.formatEther(liquidity.toString())
+        let liquidityFormatted = liquidity ? ethers.utils.formatEther(liquidity.toString()) : 0
         setEthReserves(liquidityFormatted)
         let tokenReserves = await getTokenReserves()
-        let tokenReservesFormatted = ethers.utils.formatEther(tokenReserves.toString())
+        let tokenReservesFormatted = tokenReserves
+            ? ethers.utils.formatEther(tokenReserves.toString())
+            : 0
         setTokenReserves(tokenReservesFormatted)
     }
     //Function called onChange when introducing correct input
@@ -419,20 +421,20 @@ export default function Home() {
         params: {},
     })
     return (
-        <div className="container mx-1 min-h-screen ">
+        <div className="container min-h-screen w-screen py-4">
             {chainString != 5 ? (
-                <h1 className="py-4 px-4 font-bold text-3xl m-14 min-h-full font-mono text-white">
+                <h1 className="py-4 px-4 font-bold text-3xl my14 min-h-full font-mono text-white">
                     "Please connect to the Göerli testnet"
                 </h1>
             ) : (
                 ""
             )}
 
-            <div className="my-5  flex ">
+            <div className="  flex justify-between min-w-full max-h-fit">
                 {isWeb3Enabled ? (
                     chainString == 5 ? (
-                        <div className=" container w-100 mx-12  ">
-                            <div>
+                        <div className=" basis-1/3  sm ml-12  ">
+                            <div className="container w-80">
                                 {showExp ? (
                                     <div></div>
                                 ) : dexDisplayed ? (
@@ -440,7 +442,7 @@ export default function Home() {
                                         <ul class="flex">
                                             <li class="mr-3 py-1">
                                                 <a
-                                                    class="inline-block border border-fuchsia-700 rounded py-1 px-3 bg-fuchsia-700 text-white"
+                                                    class="inline-block border border-fuchsia-600 rounded py-1 px-3 bg-fuchsia-600 text-white"
                                                     href="#"
                                                 >
                                                     Eth to Tokens
@@ -477,7 +479,7 @@ export default function Home() {
                                             </li>
                                             <li class="mr-3 py-1">
                                                 <a
-                                                    class="inline-block border border-fuchsia-700 rounded py-1 px-3 bg-fuchsia-700 text-white"
+                                                    class="inline-block border border-fuchsia-600 rounded py-1 px-3 bg-fuchsia-600 text-white"
                                                     href="#"
                                                 >
                                                     Tokens to Eth
@@ -500,7 +502,7 @@ export default function Home() {
                             {showExp ? (
                                 <div></div>
                             ) : (
-                                <div className="flex justify-left my-5">
+                                <div className="flex justify-left w-70">
                                     <button
                                         onClick={() => setShowExp(1)}
                                         class="inline-block border hover:bg-fuchsia-800 border-fuchsia-500 rounded py-1 px-3 bg-fuchsia-500 text-white"
@@ -519,7 +521,7 @@ export default function Home() {
                             />
                         </div>
                     ) : (
-                        <div className="py-4 px-4 font-mono"> Thank you for your patience </div>
+                        <div className="py-4 px-4 font-mono"> </div>
                     )
                 ) : (
                     <div class="font-mono text-xl text-white m-16">
@@ -530,14 +532,14 @@ export default function Home() {
                 {!showExp ? (
                     isWeb3Enabled ? (
                         chainString == 5 ? (
-                            <div className="justify-center container">
-                                <div>
+                            <div className="justify-center  ml-5 pr-5 basis-3/5">
+                                <div className="container">
                                     {reservesDisplayed ? (
                                         <div>
                                             <ul class="flex">
                                                 <li class="mr-3 py-1">
                                                     <a
-                                                        class="inline-block border border-fuchsia-700 rounded py-1 px-3 bg-fuchsia-700 text-white"
+                                                        class="inline-block border border-fuchsia-600 rounded py-1 px-3 bg-fuchsia-600 text-white"
                                                         href="#"
                                                     >
                                                         Bar chart
@@ -589,7 +591,7 @@ export default function Home() {
                                                 </li>
                                                 <li class="mr-3 py-1">
                                                     <a
-                                                        class="inline-block border border-fuchsia-700 rounded py-1 px-3 bg-fuchsia-700 text-white"
+                                                        class="inline-block border border-fuchsia-600 rounded py-1 px-3 bg-fuchsia-600 text-white"
                                                         href="#"
                                                     >
                                                         Graph
@@ -619,7 +621,7 @@ export default function Home() {
                                 </div>
                             </div>
                         ) : (
-                            <div className="py-4 px-4 font-mono"> Thank you for your patience </div>
+                            <div className="py-4 px-4 font-mono"> </div>
                         )
                     ) : (
                         <div class="font-mono"> </div>

@@ -40,6 +40,7 @@ export default function Reserves({
 
     const [showAlertDeposit, setShowAlertDeposit] = useState(false)
     const [showAlertWithdraw, setShowAlertWithdraw] = useState(false)
+    const [lpShow, setLpShow] = useState(true)
     function handleDepositChange(e) {
         if (/^\d+\.*(\d+)*$/.test(e.target.value)) {
             if (tokensApproved >= tokensToApprove) {
@@ -147,14 +148,15 @@ export default function Reserves({
     return (
         <div>
             <div className="w-full max-w-xl min-h-4xl hover:bg-slate-300">
-                <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <form className="bg-white shadow-md rounded px-8 pt-6  mb-4">
                     <div className="mb-4">
-                        <label
-                            className="block text-gray-700 text-xl font-bold mb-2"
-                            for="username"
-                        >
-                            ETH / DEX liquidity pool
-                        </label>{" "}
+                        <h1 class="flex items-center text-2xl font-bold dark:text-Black">
+                            <span class="bg-blue-100 text-blue-800 text-2xl font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-2">
+                                ETH / DEX
+                            </span>
+                            Liquidity Pool
+                        </h1>
+
                         <div className="m-2 font-bold text-gray-400">
                             Current Reserves: {parseFloat(Number(ethReserves).toFixed(5))} ETH /
                             {" " + parseFloat(Number(tokenReserves).toFixed(5))} DEX
@@ -176,7 +178,7 @@ export default function Reserves({
                 <p className="text-center text-gray-500 text-xs"></p>
             </div>
             <div className="w-full max-w-xl min-h-4xl hover:bg-slate-300">
-                <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <form className="bg-white shadow-md rounded px-8 pt-3 pb-8 mb-4">
                     <div className="mb-4">
                         <div className="flex items-center justify-between m-2"></div>{" "}
                         <div className="">
@@ -186,17 +188,24 @@ export default function Reserves({
                             >
                                 Deposit and Withdraw Liquidity
                             </label>
-                            <label
-                                className="block text-gray-500 text-m font-bold mb-2"
-                                for="username"
+                            <button
+                                onMouseOver={() => setLpShow(false)}
+                                onMouseLeave={() => setLpShow(true)}
+                                class="bg-indigo-400 my-1 text-white font-bold py-2 px-4 rounded-full"
                             >
-                                You own {parseFloat(Number(LPTokens).toFixed(5))} LP tokens.
-                            </label>{" "}
-                            <p className="my-2 text-violet-500 hover:text-violet-800">
-                                <a href={url} target="_blank">
-                                    LP token address: {LPTokenAddress}
-                                </a>
-                            </p>
+                                {lpShow ? (
+                                    <>
+                                        You own {parseFloat(Number(LPTokens).toFixed(5))} LP tokens.
+                                    </>
+                                ) : (
+                                    <>
+                                        <a href={url} target="_blank">
+                                            Click to see LP token on block explorer
+                                        </a>
+                                    </>
+                                )}
+                            </button>
+
                             {tokensApproved ? (
                                 tokensApproved >= tokensToApprove ? (
                                     <Alert severity="success">

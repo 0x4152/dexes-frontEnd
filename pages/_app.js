@@ -11,11 +11,11 @@ import { NotificationProvider } from "web3uikit"
 //})
 function MyApp({ Component, pageProps }) {
     return (
-        <div class="bg-back bg-fixed">
+        <div class="bg-back bg-fixed bg-auto min-h-screen">
             <Head>
                 <title>Dexes</title>
                 <meta name="description" content="Decentralized exchanges" />
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" href="/icon.ico" />
             </Head>
 
             <MoralisProvider initializeOnMount={false}>
