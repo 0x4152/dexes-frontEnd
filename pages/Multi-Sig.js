@@ -363,14 +363,15 @@ export default function Home() {
                                                 Step by Step
                                             </label>
                                             <p>
-                                                0. Click on the "add my account to owners" button.
+                                                0. Click on the "Become a Multi-Sig owner" button.
                                                 It will make a call to add your address to the array
                                                 of owners that can interact with the contract. Wait
                                                 for the transaction to be included in a block.
                                             </p>
                                             <p>
-                                                1. Click mint 1 DEX. This will queue a transaction,
-                                                it will then be possible to confirm the transaction.
+                                                1. Click mint 0.1 DEX. This will queue a
+                                                transaction, it will then be possible to confirm the
+                                                transaction.
                                             </p>
                                             <p>
                                                 2. Click "Confirm the transaction" inputing the
@@ -379,7 +380,8 @@ export default function Home() {
                                             <p>
                                                 3. The transaction will need two confirmations to be
                                                 executable. For testing purposes repeat step 1 and
-                                                step 3, inputing the same tx index.
+                                                step 3, inputing the same tx index with different
+                                                accounts.
                                             </p>{" "}
                                             <p>
                                                 4. Once the transaction has two confirmations, it
