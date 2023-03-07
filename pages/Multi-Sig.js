@@ -1,24 +1,7 @@
-import Head from "next/head"
-import Image from "next/image"
-import checkImage from "../img/shield.png"
-import thumbImage from "../img/thumb.png"
-import styles from "../styles/Home.module.css"
 import { useState, useEffect } from "react"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import networkMapping from "../constants/networkMapping.json"
-import DexABI from "../constants/DexV1abi.json"
-import DEXABI from "../constants/DEXabi.json"
-import WBTCabi from "../constants/WBTC.json"
-import LPTokenabi from "../constants/LPTokenabi.json"
-import { Card, useNotification } from "web3uikit"
-import { ethers } from "ethers"
-import DexV1EthToToken from "../components/dexV1EthToToken"
-import DexV1TokenToEth from "../components/dexV1TokenToEth"
-import Graph from "../components/graph"
-import WETHabi from "../constants/WETHabi.json"
-import Reserves from "../components/reserves"
-import Explanation from "../components/expl"
-import { letterSpacing } from "@mui/system"
+import { useNotification } from "web3uikit"
 import tokenControlAbi from "../constants/tokenControlAbi.json"
 import Indexer from "../components/indexer"
 import { Alert } from "@mui/material"
@@ -99,7 +82,7 @@ export default function Home() {
     useEffect(() => {}, [])
 
     useEffect(() => {
-        if (isWeb3Enabled) {
+        if (isWeb3Enabled && chainString == 5) {
             updateUI()
         }
     }, [isWeb3Enabled, inputIndex, lastTxIndex, isOwner, showStepByStep, txCount])
@@ -627,10 +610,13 @@ export default function Home() {
                         </div>
                     </div>
                 ) : (
-                    <div> not in goerli</div>
+                    <div className="py-10 px-4 font-bold text-3xl  min-h-full  text-white">
+                        {" "}
+                        "Please connect to the Göerli testnet"
+                    </div>
                 )
             ) : (
-                <div class="font-mono text-xl text-white m-16">
+                <div class="py-10 px-4 font-bold text-3xl  min-h-full  text-white">
                     {" "}
                     Web3 currently not enabled, please connect your wallet
                 </div>

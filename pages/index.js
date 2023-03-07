@@ -422,8 +422,8 @@ export default function Home() {
     })
     return (
         <div className="container min-h-screen w-screen py-4">
-            {chainString != 5 ? (
-                <h1 className="py-4 px-4 font-bold text-3xl my14 min-h-full font-mono text-white">
+            {isWeb3Enabled && chainString != 5 ? (
+                <h1 className="py-10 px-4 font-bold text-3xl  min-h-full  text-white">
                     "Please connect to the Göerli testnet"
                 </h1>
             ) : (
