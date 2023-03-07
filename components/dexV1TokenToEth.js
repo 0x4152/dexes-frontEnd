@@ -1,11 +1,5 @@
-import { useState, useEffect } from "react"
-import { Input, Modal, useNotification, Card } from "web3uikit"
-
 import { Alert } from "@mui/material"
-import { useWeb3Contract, useMoralis } from "react-moralis"
-import WETHabi from "../constants/WETHabi.json"
-import WBTCabi from "../constants/WBTC.json"
-import { ethers } from "ethers"
+import { useMoralis } from "react-moralis"
 export default function DexV1TokenToEth({
     setTokenAmount,
     tokenAmount,
@@ -14,10 +8,7 @@ export default function DexV1TokenToEth({
     tokensToApproveExchange,
     onExchangeTokenToEthClick,
     tokensApproved,
-    setTokensToApproveExchange,
 }) {
-    const { isWeb3Enabled, chainId, account } = useMoralis()
-
     function handleTokenChange(e) {
         if (/^\d+\.*(\d+)*$/.test(e.target.value)) {
             setTokenAmount(e.target.value)

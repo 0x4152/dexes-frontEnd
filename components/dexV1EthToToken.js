@@ -1,10 +1,4 @@
-import { useState, useEffect } from "react"
-import { Input, Modal, useNotification, Card } from "web3uikit"
-
-import { useWeb3Contract, useMoralis } from "react-moralis"
-import WETHabi from "../constants/WETHabi.json"
-import WBTCabi from "../constants/WBTC.json"
-import { ethers } from "ethers"
+import { useMoralis } from "react-moralis"
 export default function DexV1EthToToken({ onClick, setTokenAmount, tokenAmount, expectedTokens }) {
     const { isWeb3Enabled, chainId, account } = useMoralis()
 

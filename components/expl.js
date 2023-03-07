@@ -1,12 +1,5 @@
-import { useState, useEffect } from "react"
-import { Input, Modal, useNotification, Card } from "web3uikit"
-import { Alert } from "@mui/material"
-import { Scatter } from "react-chartjs-2"
-import { Chart as ChartJS } from "chart.js/auto"
+import { useState } from "react"
 
-import { useWeb3Contract, useMoralis } from "react-moralis"
-import { ethers } from "ethers"
-import { parse } from "graphql"
 export default function Explanation({
     setShowExp,
     showExp,

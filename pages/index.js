@@ -1,16 +1,10 @@
-import Head from "next/head"
-import Image from "next/image"
-import checkImage from "../img/shield.png"
-import thumbImage from "../img/thumb.png"
-import styles from "../styles/Home.module.css"
 import { useState, useEffect } from "react"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import networkMapping from "../constants/networkMapping.json"
 import DexABI from "../constants/DexV1abi.json"
-import DEXABI from "../constants/DEXabi.json"
 import WBTCabi from "../constants/WBTC.json"
 import LPTokenabi from "../constants/LPTokenabi.json"
-import { Card, useNotification } from "web3uikit"
+import { useNotification } from "web3uikit"
 import { ethers } from "ethers"
 import DexV1EthToToken from "../components/dexV1EthToToken"
 import DexV1TokenToEth from "../components/dexV1TokenToEth"
@@ -18,7 +12,6 @@ import Graph from "../components/graph"
 import WETHabi from "../constants/WETHabi.json"
 import Reserves from "../components/reserves"
 import Explanation from "../components/expl"
-import { letterSpacing } from "@mui/system"
 
 export default function Home() {
     const dispatch = useNotification()
@@ -45,18 +38,7 @@ export default function Home() {
     const [tokenAmountToApproveFinal, setTokenAmountToApproveFinal] = useState(0)
     const [withdrawAmount, setWithdrawAmount] = useState(0)
     const [showExp, setShowExp] = useState(0)
-    //calculations
-    async function ethToTokensBoughtCalculation() {
-        let msgValue = ethers.utils.parseEther(tokenAmount.toString())
 
-        let tokenBalance = await getTokenReserves()
-        let ethBalance = await getLiquidity()
-        let initialEthReserves = ethBalance
-        let input_with_fee = msgValue * 997
-        let numerator = tokenBalance * input_with_fee
-        let denominator = initialEthReserves * 1000 + input_with_fee
-        let tokensBought = numerator / denominator
-    }
     //Function that updates the amount of tokens that need to be approved to deposit "depositEthAmount" (the input in the deposit liquidity), to
     //To take exactly that amount of tokens upon depositing.
     function updateDepositTokensCalculation() {
@@ -90,8 +72,6 @@ export default function Home() {
         let LPTokensFormatted = parseFloat(LPTokens) / 1000000000000000000
         setLPTokens(LPTokensFormatted)
         if (dexDisplayed) {
-            ethToTokensBoughtCalculation()
-
             let tokensExpected = await ethToTokenView()
             let tokensExpectedFormatted = tokensExpected / 1000000000000000000
             setExpectedTokenAmount(tokensExpectedFormatted)
@@ -139,18 +119,7 @@ export default function Home() {
     ///////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////
-    //Handle card clicks
-    const handleCardClick = () => {
-        if (tokenAmount > 0) {
-            console.log("CardClick")
-            approve({
-                onError: (error) => {
-                    console.log(error)
-                },
-                onSuccess: (tx) => handleApproveSuccess(tx),
-            })
-        }
-    }
+
     ////ETH to TOKEN
     const exchangeEthToToken = () => {
         if (tokenAmount > 0) {

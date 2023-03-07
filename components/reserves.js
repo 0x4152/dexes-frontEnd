@@ -1,15 +1,7 @@
 import { useState, useEffect } from "react"
-import { Input, Modal, useNotification, Card } from "web3uikit"
 import { Alert } from "@mui/material"
 import { Bar } from "react-chartjs-2"
-import { Chart as ChartJS } from "chart.js/auto"
 
-import { useWeb3Contract, useMoralis } from "react-moralis"
-import networkMapping from "../constants/networkMapping.json"
-import DexABI from "../constants/DexV1abi.json"
-import WETHabi from "../constants/WETHabi.json"
-import WBTCabi from "../constants/WBTC.json"
-import { ethers } from "ethers"
 export default function Reserves({
     tokenAmount,
     dexDisplayed,
@@ -29,7 +21,6 @@ export default function Reserves({
     withdrawAmount,
     setWithdrawAmount,
 }) {
-    const { isWeb3Enabled, chainId, account } = useMoralis()
     const LPTokenAddressString = LPTokenAddress.toString()
     const url = "https://goerli.etherscan.io/address/" + LPTokenAddressString + ""
     const [data, setData] = useState({
